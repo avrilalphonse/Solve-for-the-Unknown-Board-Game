@@ -197,13 +197,12 @@ void SetPWMDutyCycle(TIM_HandleTypeDef *timer, uint32_t channel, uint32_t value)
 
 struct { GPIO_TypeDef *port; uint32_t pin; }
 rows[] = {
-    { GPIOC, GPIO_PIN_7 },
     { GPIOA, GPIO_PIN_9 },
     { GPIOA, GPIO_PIN_8 },
-    { GPIOB, GPIO_PIN_10 }
+    { GPIOB, GPIO_PIN_10 },
+    { GPIOB, GPIO_PIN_4 }
 },
 cols[] = {
-    { GPIOB, GPIO_PIN_4 },
     { GPIOB, GPIO_PIN_5 },
     { GPIOB, GPIO_PIN_3 },
     { GPIOA, GPIO_PIN_10 }
@@ -213,6 +212,10 @@ void InitializeKeypad() {
     // rows are outputs, columns are inputs and are pulled low so they don't "float"
     for (int i = 0; i < 4; ++i) {
         InitializePin(rows[i].port, rows[i].pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
+        //InitializePin(cols[i].port, cols[i].pin, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);
+     }
+     for (int i = 0; i < 3; ++i) {
+        //InitializePin(rows[i].port, rows[i].pin, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);
         InitializePin(cols[i].port, cols[i].pin, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);
      }
 }
@@ -224,9 +227,9 @@ int ReadKeypad() {
         // enable the pin for (only) this row
         for (int i = 0; i < 4; ++i)
             HAL_GPIO_WritePin(rows[i].port, rows[i].pin, i == row);  // all low except the row we care about
-        for (int col = 0; col < 4; ++col)  // check all the column pins to see if any are high
+        for (int col = 0; col < 3; ++col)  // check all the column pins to see if any are high
             if (HAL_GPIO_ReadPin(cols[col].port, cols[col].pin))
-                return row*4+col;
+                return row*3+col;
     }
     return -1;  // none of the keys were pressed
 }
