@@ -11,7 +11,8 @@
 //#define BUTTON_BLINK
 // #define LIGHT_SCHEDULER
 // #define TIME_RAND
-#define KEYPAD
+//#define KEYPAD
+#define ROLLING_DICE
 // #define KEYPAD_CONTROL
 // #define SEVEN_SEGMENT
 // #define KEYPAD_SEVEN_SEGMENT
@@ -20,9 +21,13 @@
 // #define ANALOG
 // #define PWM
 
+char roll_the_dice();
+
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
+#include <time.h> // for random num generator
+#include <stdlib.h> // for random num generator
 
 #include "ece198.h"
 
@@ -122,6 +127,18 @@ int main(void)
         while (ReadKeypad() < 0);   // wait for a valid key
         SerialPutc(keypad_symbols[ReadKeypad()]);  // look up its ASCII symbol and send it to the hsot
         while (ReadKeypad() >= 0);  // wait until key is released
+    }
+#endif
+
+#ifdef ROLLING_DICE
+    InitializeKeypad();
+    while (true)
+    {
+        while (ReadKeypad() < 0);   // wait for a valid key
+        int key = ReadKeypad();
+        if (key == 9)  // top-right key in a 4x4 keypad, usually 'A'
+            SerialPutc(roll_the_dice());   // toggle LED on or off
+         while (ReadKeypad() >= 0);  // wait until key is released
     }
 #endif
 
@@ -264,8 +281,22 @@ int main(void)
         }
     }
 #endif
+
+    
     return 0;
 }
+
+char roll_the_dice()
+{
+     // wait for button press (active low)
+    //bool counter;
+    //counter = true;
+    char *dice_numbers = "123456";
+    //int r = rand() % 6;
+    return (dice_numbers[rand() % 6]);
+     
+}
+
 
 // This function is called by the HAL once every millisecond
 void SysTick_Handler(void)
