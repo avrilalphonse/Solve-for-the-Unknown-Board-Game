@@ -12,7 +12,8 @@
 // #define LIGHT_SCHEDULER
 // #define TIME_RAND
 //#define KEYPAD
-#define ROLLING_DICE
+//#define ROLLING_DICE
+#define ROLL_GET_CLUE
 // #define KEYPAD_CONTROL
 // #define SEVEN_SEGMENT
 // #define KEYPAD_SEVEN_SEGMENT
@@ -22,6 +23,8 @@
 // #define PWM
 
 char roll_the_dice();
+int num_of_players();
+char keypad_output();
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -140,6 +143,32 @@ int main(void)
             SerialPutc(roll_the_dice());   // toggle LED on or off
          while (ReadKeypad() >= 0);  // wait until key is released
     }
+#endif
+
+//SerialPutc(num_of_players());
+#ifdef ROLL_GET_CLUE
+    //int roll = 0;
+    bool dice = true;
+    for(int i = 0; i < 4; ++i)
+    {
+        InitializeKeypad();
+        //while (true)
+        //{
+            while (ReadKeypad() < 0);   // wait for a valid key
+            while(dice)
+            {
+                int key = ReadKeypad();
+                if (key == 9)  // top-right key in a 4x4 keypad, usually 'A'
+                {
+                    SerialPutc(roll_the_dice());   // toggle LED on or off
+                    dice = false;
+                } 
+            }//end rolling dice
+            while (ReadKeypad() >= 0);  // wait until key is released
+        //}
+        
+        dice = true;
+    }//for loop
 #endif
 
 #ifdef KEYPAD_CONTROL
@@ -297,6 +326,31 @@ char roll_the_dice()
      
 }
 
+int num_of_players()
+{
+    bool players = true;
+    char *keypad_symbols = "123456789*0#";
+    // note that they're numbered from left to right and top to bottom, like reading words on a page
+
+    InitializeKeypad();
+    while (ReadKeypad() < 0);   // wait for a valid key
+    while (players)
+    {
+        int key = ReadKeypad();
+        if (key != 9 && key != 10 && key != 11)  // top-right key in a 4x4 keypad, usually 'A'
+        {
+            return (keypad_symbols[ReadKeypad()]);  
+            players = false;
+        }
+    }
+    while (ReadKeypad() >= 0);  // wait until key is released
+    return 0;
+}
+
+char keypad_output()
+{
+    return 'a';
+}
 
 // This function is called by the HAL once every millisecond
 void SysTick_Handler(void)
