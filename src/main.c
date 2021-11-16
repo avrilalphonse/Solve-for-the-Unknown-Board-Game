@@ -34,6 +34,43 @@ char keypad_output();
 
 #include "ece198.h"
 
+char roll_the_dice()
+{
+     // wait for button press (active low)
+    //bool counter;
+    //counter = true;
+    char *dice_numbers = "123456";
+    //int r = rand() % 6;
+    return (dice_numbers[rand() % 6]);
+     
+}
+
+int num_of_players()
+{
+    bool players = true;
+    char *keypad_symbols = "123456789*0#";
+    // note that they're numbered from left to right and top to bottom, like reading words on a page
+
+    InitializeKeypad();
+    while (ReadKeypad() < 0);   // wait for a valid key
+    while (players)
+    {
+        int key = ReadKeypad();
+        if (key != 9 && key != 10 && key != 11)  // top-right key in a 4x4 keypad, usually 'A'
+        {
+            return (keypad_symbols[ReadKeypad()]);  
+            players = false;
+        }
+    }
+    while (ReadKeypad() >= 0);  // wait until key is released
+    return 0;
+}
+
+char keypad_output()
+{
+    return 'a';
+}
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -59,6 +96,37 @@ int main(void)
 
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
+
+//SerialPutc(num_of_players());
+#ifdef ROLL_GET_CLUE
+    //int roll = 0;
+    bool dice = true;
+    for(int i = 0; i < 4; ++i)
+    {
+        InitializeKeypad();
+        //while (true)
+        //{
+            while (ReadKeypad() < 0);   // wait for a valid key
+            while(dice)
+            {
+                int key = ReadKeypad();
+                if (key == 9)  // top-right key in a 4x4 keypad, usually 'A'
+                {
+                    SerialPutc(roll_the_dice());   // toggle LED on or off
+                    dice = false;
+                } 
+            }//end rolling dice
+            while (ReadKeypad() >= 0);  // wait until key is released
+        //}
+        
+        dice = true;
+    }//for loop
+#endif
+
+
+
+
+
 
 #ifdef BUTTON_BLINK
     // Wait for the user to push the blue button, then blink the LED.
@@ -143,32 +211,6 @@ int main(void)
             SerialPutc(roll_the_dice());   // toggle LED on or off
          while (ReadKeypad() >= 0);  // wait until key is released
     }
-#endif
-
-//SerialPutc(num_of_players());
-#ifdef ROLL_GET_CLUE
-    //int roll = 0;
-    bool dice = true;
-    for(int i = 0; i < 4; ++i)
-    {
-        InitializeKeypad();
-        //while (true)
-        //{
-            while (ReadKeypad() < 0);   // wait for a valid key
-            while(dice)
-            {
-                int key = ReadKeypad();
-                if (key == 9)  // top-right key in a 4x4 keypad, usually 'A'
-                {
-                    SerialPutc(roll_the_dice());   // toggle LED on or off
-                    dice = false;
-                } 
-            }//end rolling dice
-            while (ReadKeypad() >= 0);  // wait until key is released
-        //}
-        
-        dice = true;
-    }//for loop
 #endif
 
 #ifdef KEYPAD_CONTROL
@@ -313,43 +355,6 @@ int main(void)
 
     
     return 0;
-}
-
-char roll_the_dice()
-{
-     // wait for button press (active low)
-    //bool counter;
-    //counter = true;
-    char *dice_numbers = "123456";
-    //int r = rand() % 6;
-    return (dice_numbers[rand() % 6]);
-     
-}
-
-int num_of_players()
-{
-    bool players = true;
-    char *keypad_symbols = "123456789*0#";
-    // note that they're numbered from left to right and top to bottom, like reading words on a page
-
-    InitializeKeypad();
-    while (ReadKeypad() < 0);   // wait for a valid key
-    while (players)
-    {
-        int key = ReadKeypad();
-        if (key != 9 && key != 10 && key != 11)  // top-right key in a 4x4 keypad, usually 'A'
-        {
-            return (keypad_symbols[ReadKeypad()]);  
-            players = false;
-        }
-    }
-    while (ReadKeypad() >= 0);  // wait until key is released
-    return 0;
-}
-
-char keypad_output()
-{
-    return 'a';
 }
 
 // This function is called by the HAL once every millisecond
