@@ -13,7 +13,7 @@
 // #define TIME_RAND
 //#define KEYPAD
 //#define ROLLING_DICE
-#define ROLL_GET_CLUE
+//#define ROLL_GET_CLUE
 // #define KEYPAD_CONTROL
 // #define SEVEN_SEGMENT
 // #define KEYPAD_SEVEN_SEGMENT
@@ -36,19 +36,19 @@ char keypad_output();
 
 char roll_the_dice()
 {
-     // wait for button press (active low)
-    //bool counter;
-    //counter = true;
-    char *dice_numbers = "123456";
-    //int r = rand() % 6;
-    return (dice_numbers[rand() % 6]);
+    //srand (time(0)); //seed
+    //char *dice_numbers = "123456";
+    int high = 6, low = 1;
+    int r = (rand() % (high + 1 - low)) + low;
+    char charVal = r + '0';
+    return (charVal); //dice_numbers[rand() %6]
      
 }
 
 int num_of_players()
 {
     bool players = true;
-    char *keypad_symbols = "123456789*0#";
+    //char *keypad_symbols = "123456789*0#";
     // note that they're numbered from left to right and top to bottom, like reading words on a page
 
     InitializeKeypad();
@@ -58,7 +58,7 @@ int num_of_players()
         int key = ReadKeypad();
         if (key != 9 && key != 10 && key != 11)  // top-right key in a 4x4 keypad, usually 'A'
         {
-            return (keypad_symbols[ReadKeypad()]);  
+            return 2;  
             players = false;
         }
     }
@@ -97,49 +97,34 @@ int main(void)
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
+    //get_clue();
 //SerialPutc(num_of_players());
 #ifdef ROLL_GET_CLUE
     //int roll = 0;
     bool dice = true;
-    for(int i = 0; i < 4; ++i)
+    int numOfPlayers = 0;
+    numOfPlayers = num_of_players();
+    //srand(time(NULL));
+    for(int k = 0; k < numOfPlayers; ++k)
     {
-        InitializeKeypad();
-        //while (true)
-        //{
+        //srand(time(0));
+        for(int i = 0; i < 4; ++i)
+        {
+            InitializeKeypad();
             while (ReadKeypad() < 0);   // wait for a valid key
             while(dice)
             {
                 int key = ReadKeypad();
                 if (key == 9)  // top-right key in a 4x4 keypad, usually 'A'
                 {
+                   // 
                     SerialPutc(roll_the_dice());   // toggle LED on or off
                     dice = false;
                 } 
             }//end rolling dice
             while (ReadKeypad() >= 0);  // wait until key is released
-        //}
-        
-        dice = true;
-    }//for loop
-#endif
-
-
-
-
-
-
-#ifdef BUTTON_BLINK
-    // Wait for the user to push the blue button, then blink the LED.
-
-    // wait for button press (active low)
-    while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
-    {
-    }
-
-    while (1) // loop forever, blinking the LED
-    {
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        HAL_Delay(250);  // 250 milliseconds == 1/4 second
+            dice = true;
+        }//for loop
     }
 #endif
 
@@ -226,134 +211,6 @@ int main(void)
          while (ReadKeypad() >= 0);  // wait until key is released
     }
 #endif
-
-#ifdef SEVEN_SEGMENT
-    // Display the numbers 0 to 9 inclusive on the 7-segment display, pausing for a second between each one.
-    // (remember that the GND connection on the display must go through a 220 ohm current-limiting resistor!)
-    
-    Initialize7Segment();
-    while (true)
-        for (int i = 0; i < 10; ++i)
-        {
-            Display7Segment(i);
-            HAL_Delay(1000);  // 1000 milliseconds == 1 second
-        }
-#endif
-
-#ifdef KEYPAD_SEVEN_SEGMENT
-    // Combines the previous two examples, displaying numbers from the keypad on the 7-segment display.
-
-    // this string contains the symbols on the external keypad
-    // (they may be different for different keypads)
-    char *keypad_symbols = "123A456B789C*0#D";
-    // note that they're numbered from left to right and top to bottom, like reading words on a page
-
-    InitializeKeypad();
-    Initialize7Segment();
-    while (true)
-    {
-        int key = ReadKeypad();
-        if (key >= 0)
-            Display7Segment(keypad_symbols[key]-'0');  // tricky code to convert ASCII digit to a number
-    }
-#endif
-
-#ifdef COLOR_LED
-    // Cycle through all 8 possible colors (including off and white) as the on-board button is pressed.
-    // This example assumes that the color LED is connected to pins D11, D12 and D13.
-
-    // Remember that each of those three pins must go through a 220 ohm current-limiting resistor!
-    // Also remember that the longest pin on the LED should be hooked up to GND.
-
-    InitializePin(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // initialize color LED output pins
-    while (true) {
-        for (int color = 0; color < 8; ++color) {
-            // bottom three bits indicate which of the three LEDs should be on (eight possible combinations)
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, color & 0x01);  // blue  (hex 1 == 0001 binary)
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, color & 0x02);  // green (hex 2 == 0010 binary)
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, color & 0x04);  // red   (hex 4 == 0100 binary)
-
-            while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));   // wait for button press 
-            while (!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));  // wait for button release
-        }
-    }
-#endif
-
-#ifdef ROTARY_ENCODER
-    // Read values from the rotary encoder and update a count, which is displayed in the console.
-
-    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_PULLUP, 0);   // initialize CLK pin
-    InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_INPUT, GPIO_PULLUP, 0);   // initialize DT pin
-    InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0);  // initialize SW pin
-    
-    bool previousClk = false;  // needed by ReadEncoder() to store the previous state of the CLK pin
-    int count = 0;             // this gets incremented or decremented as we rotate the encoder
-
-    while (true)
-    {
-        int delta = ReadEncoder(GPIOB, GPIO_PIN_5, GPIOB, GPIO_PIN_4, &previousClk);  // update the count by -1, 0 or +1
-        if (delta != 0) {
-            count += delta;
-            char buff[100];
-            sprintf(buff, "%d  \r", count);
-            SerialPuts(buff);
-        }
-        bool sw = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10);  // read the push-switch on the encoder (active low, so we invert it using !)
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, sw);  // turn on LED when encoder switch is pushed in
-    }
-#endif
-
-#ifdef ANALOG
-    // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
-
-    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
-    ADC_HandleTypeDef adcInstance;      // this variable stores an instance of the ADC
-    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
-    // Enables the input pins
-    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
-    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
-    while (true)
-    {
-        // read the ADC values (0 -> 0V, 2^12 -> 3.3V)
-        uint16_t raw0 = ReadADC(&adcInstance, ADC_CHANNEL_0);
-        uint16_t raw1 = ReadADC(&adcInstance, ADC_CHANNEL_1);
-
-        // print the ADC values
-        char buff[100];
-        sprintf(buff, "Channel0: %hu, Channel1: %hu\r\n", raw0, raw1);  // hu == "unsigned short" (16 bit)
-        SerialPuts(buff);
-    }
-#endif
-
-#ifdef PWM
-    // Use Pulse Width Modulation to fade the LED in and out.
-    uint16_t period = 100, prescale = 16;
-
-    __TIM2_CLK_ENABLE();  // enable timer 2
-    TIM_HandleTypeDef pwmTimerInstance;  // this variable stores an instance of the timer
-    InitializePWMTimer(&pwmTimerInstance, TIM2, period, prescale);   // initialize the timer instance
-    InitializePWMChannel(&pwmTimerInstance, TIM_CHANNEL_1);          // initialize one channel (can use others for motors, etc)
-
-    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_AF1_TIM2); // connect the LED to the timer output
-
-    while (true)
-    {
-        // fade the LED in by slowly increasing the duty cycle
-        for (uint32_t i = 0; i < period; ++i)
-        {
-            SetPWMDutyCycle(&pwmTimerInstance, TIM_CHANNEL_1, i);
-            HAL_Delay(5);
-        }
-        // fade the LED out by slowly decreasing the duty cycle
-        for (uint32_t i = period; i > 0; --i)
-        {
-            SetPWMDutyCycle(&pwmTimerInstance, TIM_CHANNEL_1, i);
-            HAL_Delay(5);
-        }
-    }
-#endif
-
-    
     return 0;
 }
 
