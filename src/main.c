@@ -24,12 +24,14 @@ int num_of_players();
 char keypad_output();
 void print_clue();
 bool start_game();
+int get_number();
 
 
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
 #include <time.h> // for random num generator
 #include <stdlib.h> // for random num generator
+
 
 #include "ece198.h"
 
@@ -120,6 +122,19 @@ bool start_game()
     }
     return true;
 }
+
+int get_number()
+{
+    int high = 19, low = 0;
+    int ret_Val = 0;
+    int r = (rand() % (high + 1 - low)) + low;
+    int clueNum [20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+    ret_Val = clueNum [r];
+
+    return ret_Val;
+    
+}
+
 
 int main(void)
 {
