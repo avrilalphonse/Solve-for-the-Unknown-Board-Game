@@ -134,6 +134,27 @@ int get_number()
     return ret_Val;
     
 }
+void secret_code()
+{
+    int code [4];
+    bool checker = true;
+    code [0] = get_number();
+    for (int i = 1; i < 4; i++)
+    {   
+        code[i] = get_number();
+        while(checker)
+        {
+            if (code[i] != code[i-1])
+            {
+                checker = false;
+            } else
+            {
+                code[i] = get_number();
+            }
+        }
+    }
+
+}
 
 
 int main(void)
