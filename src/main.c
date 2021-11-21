@@ -8,23 +8,20 @@
 // To run a particular example, you should remove the comment (//) in
 // front of exactly ONE of the following lines:
 
-//#define BUTTON_BLINK
+// #define BUTTON_BLINK
 // #define LIGHT_SCHEDULER
 // #define TIME_RAND
-//#define KEYPAD
-//#define ROLLING_DICE
-//#define ROLL_GET_CLUE
+// #define KEYPAD
+// #define ROLLING_DICE
+// #define ROLL_GET_CLUE
 // #define KEYPAD_CONTROL
-// #define SEVEN_SEGMENT
-// #define KEYPAD_SEVEN_SEGMENT
-// #define COLOR_LED
-// #define ROTARY_ENCODER
-// #define ANALOG
-// #define PWM
 
+//FUNCTIONS
 char roll_the_dice();
 int num_of_players();
 char keypad_output();
+void print_clue();
+
 
 #include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
@@ -71,6 +68,33 @@ char keypad_output()
     return 'a';
 }
 
+void print_clue()
+{
+    char C1[100] = "Tiration";//;{'T', 'i', 'r'}
+    /*
+    char C0[100] = "Solve the question on the board";
+    char C2[100] = "# of blue chairs";
+    char C3[100] = "int a = 4; a = 3; std::cout<<a;";
+    char C4[100] = "# of working lightbulbs";
+    char C5[100] = "How many vertices are in the shape of the nano tile?";
+    char C6[100] = "I can grow on trees";
+    char C7[100] = "You can't walk up me";
+    char C8[100] = "Sugar cube";
+    char C9[100] = "How many countries do you see?";
+    char C10[100] = "Protect your head with me";
+    char C11[100] = "I sound like a car";
+    char C12[100] = "I'm smarted than you without a brain";
+    char C13[100] = "___ crash";
+    char C14[100] = "I am you in the future";
+    char C15[100] = "Red set of paper";
+    char C16[100] = "I keep you awake";
+    char C17[100] = "We move you without you moving";
+    char C18[100] = "You climb me to achieve goals";
+    char C19[100] = "Where engineers live";
+    */
+   SerialPuts(C1);
+}
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -99,34 +123,42 @@ int main(void)
 
     //get_clue();
 //SerialPutc(num_of_players());
-#ifdef ROLL_GET_CLUE
-    //int roll = 0;
+
+    //SOLVE THE UNKNOWN
+
+    //TESTING
+
+
+    //Rolling Dice
     bool dice = true;
     int numOfPlayers = 0;
     numOfPlayers = num_of_players();
-    //srand(time(NULL));
-    for(int k = 0; k < numOfPlayers; ++k)
+    
+    //srand(time(0));
+    for(int i = 0; i < 4; ++i) // FOUR TURNS -> FOUR CLUES
     {
-        //srand(time(0));
-        for(int i = 0; i < 4; ++i)
+        for(int k = 0; k < numOfPlayers; ++k)
         {
             InitializeKeypad();
             while (ReadKeypad() < 0);   // wait for a valid key
             while(dice)
             {
                 int key = ReadKeypad();
-                if (key == 9)  // top-right key in a 4x4 keypad, usually 'A'
+                if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
                 {
                    // 
-                    SerialPutc(roll_the_dice());   // toggle LED on or off
+                    SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
+                    SerialPuts("\n");
                     dice = false;
                 } 
             }//end rolling dice
             while (ReadKeypad() >= 0);  // wait until key is released
             dice = true;
-        }//for loop
-    }
-#endif
+        }// # of players rolling dice
+        print_clue();
+        SerialPuts("\n");
+    }//# of rounds loop
+
 
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
