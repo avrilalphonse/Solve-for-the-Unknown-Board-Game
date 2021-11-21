@@ -45,22 +45,30 @@ char roll_the_dice()
 int num_of_players()
 {
     bool players = true;
-    //char *keypad_symbols = "123456789*0#";
+    char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
     // note that they're numbered from left to right and top to bottom, like reading words on a page
-
+    // 0 1 2 3 4 5 6 7 8
+    int nums[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     InitializeKeypad();
-    while (ReadKeypad() < 0);   // wait for a valid key
+    
     while (players)
     {
+        while (ReadKeypad() < 0);   // wait for a valid key
         int key = ReadKeypad();
         if (key != 9 && key != 10 && key != 11)  // top-right key in a 4x4 keypad, usually 'A'
         {
-            return 2;  
+            SerialPutc(keypadSymbols[key]);
+            SerialPuts("\n");
+            return nums[key];  
             players = false;
+        } else
+        {
+            SerialPuts("Invaid Number of Players. Re-enter:");
+            SerialPuts("\n");
         }
+        while (ReadKeypad() >= 0);  // wait until key is released
     }
-    while (ReadKeypad() >= 0);  // wait until key is released
-    return 0;
+    return 1;            
 }
 
 char keypad_output()
@@ -93,6 +101,7 @@ void print_clue()
     char C19[100] = "Where engineers live";
     */
    SerialPuts(C1);
+   
 }
 
 int main(void)
@@ -130,13 +139,17 @@ int main(void)
 
 
     //Rolling Dice
+    
     bool dice = true;
     int numOfPlayers = 0;
-    numOfPlayers = num_of_players();
+    
+    SerialPuts("Welcome: ");
+   numOfPlayers = num_of_players();
     
     //srand(time(0));
-    for(int i = 0; i < 4; ++i) // FOUR TURNS -> FOUR CLUES
+    for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
     {
+        SerialPuts("\n");
         for(int k = 0; k < numOfPlayers; ++k)
         {
             InitializeKeypad();
@@ -146,17 +159,20 @@ int main(void)
                 int key = ReadKeypad();
                 if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
                 {
-                   // 
+                   //
                     SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
                     SerialPuts("\n");
                     dice = false;
-                } 
+                }
             }//end rolling dice
             while (ReadKeypad() >= 0);  // wait until key is released
             dice = true;
         }// # of players rolling dice
+        SerialPuts("Clue #");
+        char clueNum = (m+1)+'0';
+        SerialPutc(clueNum);
+        SerialPuts(": ");
         print_clue();
-        SerialPuts("\n");
     }//# of rounds loop
 
 
