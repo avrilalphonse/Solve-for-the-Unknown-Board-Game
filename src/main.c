@@ -16,14 +16,16 @@
 // #define ROLL_GET_CLUE
 // #define KEYPAD_CONTROL
 
+#include <stdbool.h> // booleans, i.e. true and false
+
 //FUNCTIONS
 char roll_the_dice();
 int num_of_players();
 char keypad_output();
 void print_clue();
+bool start_game();
 
 
-#include <stdbool.h> // booleans, i.e. true and false
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
 #include <time.h> // for random num generator
@@ -46,20 +48,18 @@ int num_of_players()
 {
     bool players = true;
     char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
-    // note that they're numbered from left to right and top to bottom, like reading words on a page
-    // 0 1 2 3 4 5 6 7 8
     int nums[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
     InitializeKeypad();
-    
     while (players)
     {
         while (ReadKeypad() < 0);   // wait for a valid key
         int key = ReadKeypad();
-        if (key != 9 && key != 10 && key != 11)  // top-right key in a 4x4 keypad, usually 'A'
+        if (key != 9 && key != 10 && key != 11)  // in case if user clicks *, 0, #
         {
-            SerialPutc(keypadSymbols[key]);
+            SerialPutc(keypadSymbols[key]); // output to console
             SerialPuts("\n");
-            return nums[key];  
+            return nums[key];  // return int to loop 
             players = false;
         } else
         {
@@ -104,6 +104,23 @@ void print_clue()
    
 }
 
+bool start_game()
+{
+    bool begin = true;
+    InitializeKeypad();
+    while (begin)
+    {
+        while (ReadKeypad() < 0);   // wait for a valid key
+        int key = ReadKeypad();
+        if(key >= 0)
+        {
+            begin = false;
+        }
+        while (ReadKeypad() >= 0);  // wait until key is released
+    }
+    return true;
+}
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -137,43 +154,49 @@ int main(void)
 
     //TESTING
 
+    bool GAME = start_game();
 
-    //Rolling Dice
-    
-    bool dice = true;
-    int numOfPlayers = 0;
-    
-    SerialPuts("Welcome: ");
-   numOfPlayers = num_of_players();
-    
-    //srand(time(0));
-    for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
+    while(GAME)
     {
-        SerialPuts("\n");
-        for(int k = 0; k < numOfPlayers; ++k)
+        SerialPuts("Welcome to The Mystery of E7: Solve the Unknown!\nPlease enter the number of players:");
+
+        //Rolling Dice
+        bool dice = true;
+        int numOfPlayers = 0;
+        numOfPlayers = num_of_players();
+        
+        SerialPuts("Let's start... Roll the dice!");
+
+        //srand(time(0));
+        for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
-            InitializeKeypad();
-            while (ReadKeypad() < 0);   // wait for a valid key
-            while(dice)
+            SerialPuts("\n");
+            for(int k = 0; k < numOfPlayers; ++k)
             {
-                int key = ReadKeypad();
-                if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
+                InitializeKeypad();
+                while (ReadKeypad() < 0);   // wait for a valid key
+                while(dice)
                 {
-                   //
-                    SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
-                    SerialPuts("\n");
-                    dice = false;
-                }
-            }//end rolling dice
-            while (ReadKeypad() >= 0);  // wait until key is released
-            dice = true;
-        }// # of players rolling dice
-        SerialPuts("Clue #");
-        char clueNum = (m+1)+'0';
-        SerialPutc(clueNum);
-        SerialPuts(": ");
-        print_clue();
-    }//# of rounds loop
+                    int key = ReadKeypad();
+                    if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
+                    {
+                    //
+                        SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
+                        SerialPuts("\n");
+                        dice = false;
+                    }
+                }//end rolling dice
+                while (ReadKeypad() >= 0);  // wait until key is released
+                dice = true;
+            }// # of players rolling dice
+            SerialPuts("Clue #");
+            char clueNum = (m+1)+'0';
+            SerialPutc(clueNum);
+            SerialPuts(": ");
+            print_clue();
+        }//# of rounds loop
+        GAME = false;
+    }// ONE GAME
 
 
 #ifdef LIGHT_SCHEDULER
