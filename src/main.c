@@ -127,6 +127,7 @@ int get_number()
 {
     int high = 19, low = 0;
     int ret_Val = 0;
+    srand(time(NULL));
     int r = (rand() % (high + 1 - low)) + low;
     int clueNum [20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
     ret_Val = clueNum [r];
@@ -136,9 +137,11 @@ int get_number()
 }
 void secret_code()
 {
-    int code [4];
+    /*int code [4];
     bool checker = true;
     code [0] = get_number();
+    
+
     for (int i = 1; i < 4; i++)
     {   
         code[i] = get_number();
@@ -153,6 +156,23 @@ void secret_code()
             }
         }
     }
+    */
+   int code [5]; 
+   //code [0] = -1;
+   bool checker = true;
+   for (int i = 1; i < 4; i++){
+       code[i] = get_number();
+        while(checker)
+        {
+            if (code[i] != code[i-1])
+            {
+                checker = false;
+            } else
+            {
+                code[i] = get_number();
+            }
+        }
+   }
 
 }
 
