@@ -26,7 +26,7 @@ void print_clue();
 bool start_game();
 int get_number();
 void secret_code();
-int clue_number_sync(int codeNum)
+int clue_number_sync(int codeNum);
 
 //void display_secret_code();
 
