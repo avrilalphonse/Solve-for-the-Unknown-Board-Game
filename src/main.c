@@ -43,6 +43,7 @@ char roll_the_dice()
     //srand (time(0)); //seed
     //char *dice_numbers = "123456";
     int high = 6, low = 1;
+    srand(HAL_GetTick());
     int r = (rand() % (high + 1 - low)) + low;
     char charVal = r + '0';
     return (charVal); //dice_numbers[rand() %6]
@@ -141,35 +142,9 @@ int get_number()
 
 void secret_code()
 {
-    int code [4]; 
-    bool checker = true;
-    for (int i = 1; i < 4; i++)
-    {
-        code[i] = get_number();
-        while(checker)
-        {
-            if (code[i] != code[i-1])
-            {
-                checker = false;
-            } else
-            {
-                code[i] = get_number();
-                clue_number_sync(code[i]);
-            }
-        }
-        checker = true;
-    }
-    //storing values as characters for final display
-    char codeCh[4];
-    for(int i = 0; i < 4; i++)
-    {
-        SerialPuts("\n");
-        if(code[i] > 9)
-        {
-            code[i] = code[i] - 10;
-        }
-        codeCh[i] = code[i] + '0';
-    }
+    
+    
+    
 }
 
 int clue_number_sync(int codeNum)
@@ -215,7 +190,36 @@ int main(void)
 
     while(GAME)
     {
-        secret_code();
+        int code [4]; 
+        bool checker = true;
+        for (int i = 1; i < 4; i++)
+        {
+            code[i] = get_number();
+            while(checker)
+            {
+                if (code[i] != code[i-1])
+                {
+                    checker = false;
+                } else
+                {
+                    code[i] = get_number();
+                    clue_number_sync(code[i]);
+                }
+            }
+            checker = true;
+        }
+        //storing values as characters for final display
+        char codeCh[4];
+        for(int i = 0; i < 4; i++)
+        {
+            SerialPuts("\n");
+            if(code[i] > 9)
+            {
+                code[i] = code[i] - 10;
+            }
+            codeCh[i] = code[i] + '0';
+            SerialPutc(codeCh[i]);
+        }
         GAME = false;
     }
 
