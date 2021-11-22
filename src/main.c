@@ -25,7 +25,8 @@ char keypad_output();
 void print_clue();
 bool start_game();
 int get_number();
-
+void secret_code();
+//void display_secret_code();
 
 #include <stdio.h>   // sprintf() function
 #include <stdlib.h>  // srand() and random() functions
@@ -127,23 +128,21 @@ int get_number()
 {
     int high = 19, low = 0;
     int ret_Val = 0;
-    srand(time(NULL));
+    srand(HAL_GetTick());
     int r = (rand() % (high + 1 - low)) + low;
-    int clueNum [20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
-    ret_Val = clueNum [r];
+    int clueNum[20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+    ret_Val = clueNum[r];
 
     return ret_Val;
     
 }
+
 void secret_code()
 {
-    /*int code [4];
+    int code [4]; 
     bool checker = true;
-    code [0] = get_number();
-    
-
     for (int i = 1; i < 4; i++)
-    {   
+    {
         code[i] = get_number();
         while(checker)
         {
@@ -155,25 +154,20 @@ void secret_code()
                 code[i] = get_number();
             }
         }
+        checker = true;
     }
-    */
-   int code [5]; 
-   //code [0] = -1;
-   bool checker = true;
-   for (int i = 1; i < 4; i++){
-       code[i] = get_number();
-        while(checker)
+    //clue_number_sync(code[0], code[1], code[2], code[3]);
+    //storing values as characters for final display
+    char codeCh[4];
+    for(int i = 0; i < 4; i++)
+    {
+        SerialPuts("\n");
+        if(code[i] > 9)
         {
-            if (code[i] != code[i-1])
-            {
-                checker = false;
-            } else
-            {
-                code[i] = get_number();
-            }
+            code[i] = code[i] - 10;
         }
-   }
-
+        codeCh[i] = code[i] + '0';
+    }
 }
 
 
@@ -209,7 +203,15 @@ int main(void)
     //SOLVE THE UNKNOWN
 
     //TESTING
+    bool GAME = start_game();
 
+    while(GAME)
+    {
+        secret_code();
+        GAME = false;
+    }
+
+/*
     bool GAME = start_game();
 
     while(GAME)
@@ -253,7 +255,7 @@ int main(void)
         }//# of rounds loop
         GAME = false;
     }// ONE GAME
-
+*/
 
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
