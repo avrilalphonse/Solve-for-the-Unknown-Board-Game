@@ -25,7 +25,6 @@ char keypad_output();
 void print_clue();
 bool start_game();
 int get_number();
-void secret_code();
 int clue_number_sync(int codeNum);
 
 //void display_secret_code();
@@ -140,13 +139,6 @@ int get_number()
     
 }
 
-void secret_code()
-{
-    
-    
-    
-}
-
 int clue_number_sync(int codeNum)
 {
     int numForClue = 0;
@@ -186,6 +178,7 @@ int main(void)
     //SOLVE THE UNKNOWN
 
     //TESTING
+/*
     bool GAME = start_game();
 
     while(GAME)
@@ -222,8 +215,8 @@ int main(void)
         }
         GAME = false;
     }
+*/
 
-/*
     bool GAME = start_game();
 
     while(GAME)
@@ -241,7 +234,7 @@ int main(void)
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
             SerialPuts("\n");
-            for(int k = 0; k < numOfPlayers; ++k)
+            for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
             {
                 InitializeKeypad();
                 while (ReadKeypad() < 0);   // wait for a valid key
@@ -259,6 +252,39 @@ int main(void)
                 while (ReadKeypad() >= 0);  // wait until key is released
                 dice = true;
             }// # of players rolling dice
+
+            //Storing Integer Values of Code/Password
+            int code [4]; 
+            bool checker = true;
+            code[m] = get_number();
+            while(checker)
+            {
+                if (m == 0) 
+                {
+                    checker = false;
+                } else if(code[m] != code[m-1])// m > 0
+                {
+                    checker = false;
+                } else
+                {
+                    code[m] = get_number();
+                }
+            }
+            clue_number_sync(code[m]);
+            checker = true;
+
+            //storing values as characters for final display
+            char codeCh[4];
+            if(code[m] > 9)
+            {
+                code[m] = code[m] - 10;
+            }
+            codeCh[m] = code[m] + '0';
+            SerialPuts("PASSWORD #:");
+            SerialPutc(codeCh[m]);
+            SerialPuts("\n");
+
+            //Display Clue
             SerialPuts("Clue #");
             char clueNum = (m+1)+'0';
             SerialPutc(clueNum);
@@ -267,7 +293,7 @@ int main(void)
         }//# of rounds loop
         GAME = false;
     }// ONE GAME
-*/
+
 
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
