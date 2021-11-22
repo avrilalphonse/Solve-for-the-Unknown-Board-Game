@@ -22,7 +22,7 @@
 char roll_the_dice();
 int num_of_players();
 char keypad_output();
-void print_clue();
+void print_clue(int clueNum);
 bool start_game();
 int get_number();
 int clue_number_sync(int codeNum);
@@ -81,7 +81,7 @@ char keypad_output()
     return 'a';
 }
 
-void print_clue()
+void print_clue(int clueNum)
 {
     char C1[100] = "Tiration";//;{'T', 'i', 'r'}
     /*
@@ -132,8 +132,8 @@ int get_number()
     int ret_Val = 0;
     srand(HAL_GetTick());
     int r = (rand() % (high + 1 - low)) + low;
-    int clueNum[20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
-    ret_Val = clueNum[r];
+    int clueNumArr[20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+    ret_Val = clueNumArr[r];
 
     return ret_Val;
     
@@ -172,49 +172,11 @@ int main(void)
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
-    //get_clue();
-//SerialPutc(num_of_players());
-
     //SOLVE THE UNKNOWN
 
     //TESTING
 /*
-    bool GAME = start_game();
-
-    while(GAME)
-    {
-        int code [4]; 
-        bool checker = true;
-        for (int i = 1; i < 4; i++)
-        {
-            code[i] = get_number();
-            while(checker)
-            {
-                if (code[i] != code[i-1])
-                {
-                    checker = false;
-                } else
-                {
-                    code[i] = get_number();
-                    clue_number_sync(code[i]);
-                }
-            }
-            checker = true;
-        }
-        //storing values as characters for final display
-        char codeCh[4];
-        for(int i = 0; i < 4; i++)
-        {
-            SerialPuts("\n");
-            if(code[i] > 9)
-            {
-                code[i] = code[i] - 10;
-            }
-            codeCh[i] = code[i] + '0';
-            SerialPutc(codeCh[i]);
-        }
-        GAME = false;
-    }
+    
 */
 
     bool GAME = start_game();
@@ -223,14 +185,17 @@ int main(void)
     {
         SerialPuts("Welcome to The Mystery of E7: Solve the Unknown!\nPlease enter the number of players:");
 
-        //Rolling Dice
+        //Initializations
         bool dice = true;
         int numOfPlayers = 0;
+        char codeCh[4];
+        int code [4]; 
+        bool checker = true;
+
         numOfPlayers = num_of_players();
         
         SerialPuts("Let's start... Roll the dice!");
 
-        //srand(time(0));
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
             SerialPuts("\n");
@@ -254,8 +219,6 @@ int main(void)
             }// # of players rolling dice
 
             //Storing Integer Values of Code/Password
-            int code [4]; 
-            bool checker = true;
             code[m] = get_number();
             while(checker)
             {
@@ -270,11 +233,12 @@ int main(void)
                     code[m] = get_number();
                 }
             }
-            clue_number_sync(code[m]);
             checker = true;
 
+            int codeNumForSync = 0;
+            codeNumForSync = clue_number_sync(code[m]);
+
             //storing values as characters for final display
-            char codeCh[4];
             if(code[m] > 9)
             {
                 code[m] = code[m] - 10;
@@ -289,7 +253,7 @@ int main(void)
             char clueNum = (m+1)+'0';
             SerialPutc(clueNum);
             SerialPuts(": ");
-            print_clue();
+            print_clue(codeNumForSync);
         }//# of rounds loop
         GAME = false;
     }// ONE GAME
