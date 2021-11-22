@@ -26,6 +26,8 @@ void print_clue();
 bool start_game();
 int get_number();
 void secret_code();
+int clue_number_sync(int codeNum)
+
 //void display_secret_code();
 
 #include <stdio.h>   // sprintf() function
@@ -152,11 +154,11 @@ void secret_code()
             } else
             {
                 code[i] = get_number();
+                clue_number_sync(code[i]);
             }
         }
         checker = true;
     }
-    //clue_number_sync(code[0], code[1], code[2], code[3]);
     //storing values as characters for final display
     char codeCh[4];
     for(int i = 0; i < 4; i++)
@@ -170,6 +172,12 @@ void secret_code()
     }
 }
 
+int clue_number_sync(int codeNum)
+{
+    int numForClue = 0;
+    numForClue = codeNum;
+    return numForClue;
+}
 
 int main(void)
 {
