@@ -25,12 +25,12 @@
 //FUNCTIONS
 char roll_the_dice();
 int num_of_players();
-char keypad_output();
 void print_clue(int clueNum);
 bool start_game();
 int get_number();
 int clue_number_sync(int codeNum);
 bool code_verify (char guess_code[], char codeCh []);
+bool play_again();
 
 //void display_secret_code();
 
@@ -76,11 +76,6 @@ int num_of_players()
         while (ReadKeypad() >= 0);  // wait until key is released
     }
     return 1;            
-}
-
-char keypad_output()
-{
-    return 'a';
 }
 
 bool start_game()
@@ -130,7 +125,22 @@ bool code_verify (char guess_code[], char codeCh [])
     return true;
 }
 
-
+bool play_again()
+{
+    bool repeat = true;
+    InitializeKeypad();
+    while (ReadKeypad() < 0);   // wait for a valid key
+    while(repeat)
+    {
+        int key = ReadKeypad();
+        if (key == 11)  // TO PLAY AGAIN, CLICK '#' KEY
+        {
+            return true;
+        }
+    }//end repeat game
+    while (ReadKeypad() >= 0);  // wait until key is released
+    return false;
+}
 
 int main(void)
 {
@@ -175,7 +185,7 @@ int main(void)
 
     while(GAME)
     {
-        SerialPuts("Welcome to The Mystery of E7: Solve the Unknown!\nPlease enter the number of players:");
+        SerialPuts("Welcome to The Mystery of E7: Solve the Unknown!\nPlease enter the number of players: ");
 
         //Initializations
         bool dice = true;
@@ -287,17 +297,23 @@ int main(void)
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     if(j == 2)
                     {
-                        HAL_Delay(100);
+                        HAL_Delay(200);
                     } else
                     {
-                        HAL_Delay(250);  // 250 milliseconds == 1/4 second
+                        HAL_Delay(300); 
                     }//if statement for LED blinking speed
                 }
             }
         }//end for loop for FINAL GUESS
         SerialPuts("Game Over");
-        SerialPuts("\nPlay Again?");
-        GAME = false;
+        SerialPuts("\nTo Play Again, Press #");
+        if(play_again())
+        {
+            GAME = true;
+        } else
+        {
+            GAME = false;
+        }//end play again if statement
     }// ONE GAME
 
 
