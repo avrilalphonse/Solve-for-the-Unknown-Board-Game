@@ -171,16 +171,49 @@ int main(void)
     //SOLVE THE UNKNOWN
 
     //TESTING
+///*
+    
+    LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
+	
+	print("Hello, World!");
+	HAL_Delay(1000);
+	
+	while(1)
+	{
+		// scroll 13 positions (string length) to the left
+		// to move it offscreen left:
+		for (int positionCounter = 0; positionCounter < 13; positionCounter++) {
+			// scroll one position left:
+			scrollDisplayLeft();
+			// wait a bit:
+			HAL_Delay(350);
+		}
+
+		// scroll 29 positions (string length + display length) to the right
+		// to move it offscreen right:
+		for (int positionCounter = 0; positionCounter < 29; positionCounter++) {
+			// scroll one position right:
+			scrollDisplayRight();
+			// wait a bit:
+			HAL_Delay(350);
+		}
+
+		// scroll 16 positions (display length + string length) to the left
+		// to move it back to center:
+		for (int positionCounter = 0; positionCounter < 16; positionCounter++) {
+			// scroll one position left:
+			scrollDisplayLeft();
+			// wait a bit:
+			HAL_Delay(350);
+		}
+
+		// delay at the end of the full loop:
+		HAL_Delay(1000);
+	}
+	
+//*/
+
 /*
-    // initialize the display, specifying what port and pins to use:
-    //InitializePin(GPIO);
-    LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3,GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
-    // display a message on the first row of the display
-    setCursor(0,0);
-    print("Hello, world!");
-*/
-
-
     bool GAME = start_game();
 
     while(GAME)
@@ -341,6 +374,7 @@ SerialPuts("\n");
         }//end play again if statement
     }// ONE GAME
 
+*/
 
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
