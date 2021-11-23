@@ -228,13 +228,25 @@ int main(void)
                 if (m == 0) 
                 {
                     checker = false;
-                } else if(code[m] != code[m-1])// m > 0
+                } else if(m == 1)// m > 0 //code[m] != code[m-1]
                 {
-                    checker = false;
+                    if(code[m] != code[m-1])
+                        checker = false;
+                    else
+                        code[m] = get_number();
+                } else if(m == 2)
+                {
+                    if(code[m] != code[m-1] && code[m] != code[m-2])
+                        checker = false;
+                    else
+                        code[m] = get_number();
                 } else
                 {
-                    code[m] = get_number();
-                }
+                    if(code[m] != code[m-1] && code[m] != code[m-2] && code[m] != code[m-3])
+                        checker = false;
+                    else
+                        code[m] = get_number();
+                }//end assigning int values for the 4-digit code
             }
             checker = true;
 
