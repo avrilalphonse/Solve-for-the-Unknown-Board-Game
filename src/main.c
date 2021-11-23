@@ -242,8 +242,8 @@ int main(void)
         for(int j = 0; j < 3; j++) // 3 trials in total
         {
             char guess_code [4];
-            if (code_verify(guess_code,code)){
-                SerialPutc("You escaped!");
+            if (code_verify(guess_code, code)){
+                SerialPuts ("You escaped!");
                  while (true) // turn on LED for 5 sec
                  {
                     uint32_t now = HAL_GetTick();
@@ -256,7 +256,7 @@ int main(void)
             }
             else
             {
-                SerialPutc("Try again!");
+                SerialPuts("Try again!");
 
             }
 
