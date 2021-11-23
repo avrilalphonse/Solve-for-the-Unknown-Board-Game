@@ -305,10 +305,11 @@ int main(void)
                 }
             }
         }//end for loop for FINAL GUESS
-        SerialPuts("Game Over");
-        SerialPuts("\nTo Play Again, Press #");
+        SerialPuts("\nGame Over");
+        SerialPuts("\nTo Play Again, Press #\n");
         if(play_again())
         {
+            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
             GAME = true;
         } else
         {
