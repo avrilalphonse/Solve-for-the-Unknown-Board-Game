@@ -242,6 +242,15 @@ int main(void)
         for(int j = 0; j < 3; j++) // 3 trials in total
         {
             char guess_code [4];
+            if (code_verify(guess_code,code)){
+                SerialPutc("You escaped!");
+                //LED
+                j=3;
+            }
+            else
+            {
+                SerialPutc("Try again!");
+            }
 
         }
         GAME = false;
