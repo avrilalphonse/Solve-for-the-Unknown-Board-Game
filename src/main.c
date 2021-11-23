@@ -16,6 +16,10 @@
 // #define ROLL_GET_CLUE
 // #define KEYPAD_CONTROL
 
+#include "stm32f4xx_hal.h"
+#include "LiquidCrystal.h"
+#include "ece198.h"
+
 #include <stdbool.h> // booleans, i.e. true and false
 
 //FUNCTIONS
@@ -34,9 +38,6 @@ bool code_verify (char guess_code[], char code []);
 #include <stdlib.h>  // srand() and random() functions
 #include <time.h> // for random num generator
 #include <stdlib.h> // for random num generator
-
-
-#include "ece198.h"
 
 char roll_the_dice()
 {
@@ -158,10 +159,15 @@ int main(void)
     //SOLVE THE UNKNOWN
 
     //TESTING
-/*
-    
-*/
 
+    // initialize the display, specifying what port and pins to use:
+    LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3,GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
+    // display a message on the first row of the display
+    setCursor(0,0);
+    print("Hello, world!");
+
+
+/*
     bool GAME = start_game();
 
     while(GAME)
@@ -242,7 +248,7 @@ int main(void)
         for(int j = 0; j < 3; j++) // 3 trials in total
         {
             char guess_code [4];
-            if (code_verify(guess_code, code)){
+            if (code_verify(guess_code, codeCh)){
                 SerialPuts ("You escaped!");
                  while (true) // turn on LED for 5 sec
                  {
@@ -263,7 +269,7 @@ int main(void)
         }
         GAME = false;
     }// ONE GAME
-
+*/
 
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
