@@ -192,6 +192,7 @@ int main(void)
         int numOfPlayers = 0;
         char codeCh[4];
         int code [4]; 
+        int codeDoubleDigits = 0;
         bool checker = true;
 
         numOfPlayers = num_of_players();
@@ -240,12 +241,23 @@ int main(void)
             int codeNumForSync = 0;
             codeNumForSync = clue_number_sync(code[m]);
 
+SerialPuts("\nNUM FOR  SYNC: ");
+char tempe[2];
+tempe[1] = codeNumForSync%10 + '0';
+tempe[0] = codeNumForSync/10 + '0';
+SerialPutc(tempe[0]);
+SerialPutc(tempe[1]);
+SerialPuts("\n");
+
             //storing values as characters for final display
             if(code[m] > 9)
             {
-                code[m] = code[m] - 10;
+                codeDoubleDigits = code[m] - 10;
+                codeCh[m] = codeDoubleDigits + '0';
+            } else
+            {
+                codeCh[m] = code[m] + '0';
             }
-            codeCh[m] = code[m] + '0';
             SerialPuts("PASSWORD #:");
             SerialPutc(codeCh[m]);
             SerialPuts("\n");
