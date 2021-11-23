@@ -263,6 +263,11 @@ int main(void)
             else
             {
                 SerialPuts("Try again!");
+                    for (int o = 0; o< 10; o++)
+                    {
+                        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                         HAL_Delay(250);  // 250 milliseconds == 1/4 second
+                    }
 
             }
 
