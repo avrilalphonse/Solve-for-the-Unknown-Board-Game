@@ -26,6 +26,7 @@ void print_clue(int clueNum);
 bool start_game();
 int get_number();
 int clue_number_sync(int codeNum);
+bool code_verify (char guess_code[], char code []);
 
 //void display_secret_code();
 
@@ -116,6 +117,16 @@ int clue_number_sync(int codeNum)
     int numForClue = 0;
     numForClue = codeNum;
     return numForClue;
+}
+
+bool code_verify (char guess_code[], char code [])
+{
+    for (int i = 0; i < 3; i++){
+        if (guess_code[i] != code[i]){
+            return false;
+        }
+    }
+    return true;
 }
 
 int main(void)
@@ -227,6 +238,12 @@ int main(void)
             SerialPuts(": ");
             print_clue(codeNumForSync);
         }//# of rounds loop
+
+        for(int j = 0; j < 3; j++) // 3 trials in total
+        {
+            char guess_code [4];
+
+        }
         GAME = false;
     }// ONE GAME
 
