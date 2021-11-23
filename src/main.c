@@ -244,12 +244,20 @@ int main(void)
             char guess_code [4];
             if (code_verify(guess_code,code)){
                 SerialPutc("You escaped!");
-                //LED
+                 while (true) // turn on LED for 5 sec
+                 {
+                    uint32_t now = HAL_GetTick();
+                    if (now > 5000 && now < 10000)
+                        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
+                    else
+                        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);  // turn off LED
+                 }
                 j=3;
             }
             else
             {
                 SerialPutc("Try again!");
+
             }
 
         }
