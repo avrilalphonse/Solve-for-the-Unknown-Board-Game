@@ -255,6 +255,7 @@ int main(void)
         //SerialPuts("Let's start...");
         setCursor(3,0);
         print("Let's start");
+        HAL_Delay(3000);
         clear();
 
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
@@ -262,6 +263,7 @@ int main(void)
             //SerialPuts("\nRoll the dice!\n");
             setCursor(1,0);
             print("Roll the dice!");
+            HAL_Delay(3000);
             clear();
 
             for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
@@ -278,6 +280,7 @@ int main(void)
                         //SerialPuts("\n");
                         setCursor(7,0);
                         print(roll_the_dice());
+                        HAL_Delay(3000);
                         clear();
                         dice = false;
                     }
