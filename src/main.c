@@ -381,8 +381,12 @@ SerialPuts("\n");
                     GAME = false;
                 }//end play again if statement
             }
-            
+            else
+            {
+                hashtag = false;
+            }
         }
+        hashtag = false;
     }// ONE GAME
 
 
