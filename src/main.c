@@ -245,7 +245,7 @@ int main(void)
         setCursor(1,1);
         print("Mystery of E7!");
         HAL_Delay(3000);
-        //UNCOMMENT FOR FINAL print_moving_screen();
+        print_moving_screen();
         
         //Number of Players LCD
         setCursor(0,0);
