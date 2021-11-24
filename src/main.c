@@ -221,97 +221,98 @@ int main(void)
 
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
-            bool hashtag = true;
-            while (hashtag)
+            SerialPuts("\n");
+            for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
             {
-                SerialPuts("\n");
-                for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
+                InitializeKeypad();
+                while (ReadKeypad() < 0);   // wait for a valid key
+                while(dice)
                 {
-                    InitializeKeypad();
-                    while (ReadKeypad() < 0);   // wait for a valid key
-                    while(dice)
+                    int key = ReadKeypad();
+                    if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
                     {
-                        int key = ReadKeypad();
-                        if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
-                        {
-                        //
-                            SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
-                            SerialPuts("\n");
-                            dice = false;
-                        }
-                    }//end rolling dice
-                    while (ReadKeypad() >= 0);  // wait until key is released
-                    dice = true;
-                }// # of players rolling dice
+                    //
+                        SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
+                        SerialPuts("\n");
+                        dice = false;
+                    }
+                }//end rolling dice
+                while (ReadKeypad() >= 0);  // wait until key is released
+                dice = true;
+            }// # of players rolling dice
 
-                //Storing Integer Values of Code/Password
-                code[m] = get_number();
-                while(checker)
+            //Storing Integer Values of Code/Password
+            code[m] = get_number();
+            while(checker)
+            {
+                if (m == 0) 
                 {
-                    if (m == 0) 
-                    {
+                    checker = false;
+                } else if(m == 1)// m > 0 //code[m] != code[m-1]
+                {
+                    if(code[m] != code[m-1])
                         checker = false;
-                    } else if(m == 1)// m > 0 //code[m] != code[m-1]
-                    {
-                        if(code[m] != code[m-1])
-                            checker = false;
-                        else
-                            code[m] = get_number();
-                    } else if(m == 2)
-                    {
-                        if(code[m] != code[m-1] && code[m] != code[m-2])
-                            checker = false;
-                        else
-                            code[m] = get_number();
-                    } else
-                    {
-                        if(code[m] != code[m-1] && code[m] != code[m-2] && code[m] != code[m-3])
-                            checker = false;
-                        else
-                            code[m] = get_number();
-                    }//end assigning int values for the 4-digit code
-                }
-                checker = true;
-
-                int codeNumForSync = 0;
-                codeNumForSync = clue_number_sync(code[m]);
-
-                SerialPuts("\nNUM FOR  SYNC: ");
-                char tempe[2];
-                tempe[1] = codeNumForSync%10 + '0';
-                tempe[0] = codeNumForSync/10 + '0';
-                SerialPutc(tempe[0]);
-                SerialPutc(tempe[1]);
-                SerialPuts("\n");
-
-                //storing values as characters for final display
-                if(code[m] > 9)
+                    else
+                        code[m] = get_number();
+                } else if(m == 2)
                 {
-                    codeDoubleDigits = code[m] - 10;
-                    codeCh[m] = codeDoubleDigits + '0';
+                    if(code[m] != code[m-1] && code[m] != code[m-2])
+                        checker = false;
+                    else
+                        code[m] = get_number();
                 } else
                 {
-                    codeCh[m] = code[m] + '0';
-                }
-                SerialPuts("PASSWORD #:");
-                SerialPutc(codeCh[m]);
-                SerialPuts("\n");
+                    if(code[m] != code[m-1] && code[m] != code[m-2] && code[m] != code[m-3])
+                        checker = false;
+                    else
+                        code[m] = get_number();
+                }//end assigning int values for the 4-digit code
+            }
+            checker = true;
 
-                //Display Clue
-                SerialPuts("Clue #");
-                char clueNum = (m+1)+'0';
-                SerialPutc(clueNum);
-                SerialPuts(": ");
-                print_clue(codeNumForSync);
+            int codeNumForSync = 0;
+            codeNumForSync = clue_number_sync(code[m]);
 
-                if(next_round() == false)
+            SerialPuts("\nNUM FOR  SYNC: ");
+            char tempe[2];
+            tempe[1] = codeNumForSync%10 + '0';
+            tempe[0] = codeNumForSync/10 + '0';
+            SerialPutc(tempe[0]);
+            SerialPutc(tempe[1]);
+            SerialPuts("\n");
+
+            //storing values as characters for final display
+            if(code[m] > 9)
+            {
+                codeDoubleDigits = code[m] - 10;
+                codeCh[m] = codeDoubleDigits + '0';
+            } else
+            {
+                codeCh[m] = code[m] + '0';
+            }
+            SerialPuts("PASSWORD #:");
+            SerialPutc(codeCh[m]);
+            SerialPuts("\n");
+
+            //Display Clue
+            SerialPuts("Clue #");
+            char clueNum = (m+1)+'0';
+            SerialPutc(clueNum);
+            SerialPuts(": ");
+            print_clue(codeNumForSync);
+
+            bool hashtag = true;
+            while (hashtag){
+                SerialPuts("Click # for the next round!");
+                hashtag = next_round();
+                if (next_round() == false)
                 {
                     hashtag = false;
-                }
+                } 
                 else
                 {
                     hashtag = true;
-                }
+                } 
             }
         } //# of rounds loop
         
