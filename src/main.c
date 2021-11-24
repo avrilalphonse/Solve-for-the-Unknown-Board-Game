@@ -538,8 +538,8 @@ void print_clue(int clueNum)
 {
     if(clueNum == 0)
     {
-        char C0[100] = "Solve the question on the board";
-        SerialPuts(C0);
+        //char C0[100] = "Solve the question on the board";
+        //SerialPuts(C0);
 
         setCursor(1,0);
         print("Solve question");
@@ -547,93 +547,222 @@ void print_clue(int clueNum)
         print("on the board");
         HAL_Delay(3000);
         clear();
+
     } else if(clueNum == 1)
     {
-        char C1[100] = "Tiration";//;{'T', 'i', 'r'}
-        SerialPuts(C1);
+        //char C1[100] = "Tiration";//;{'T', 'i', 'r'}
+        //SerialPuts(C1);
 
         setCursor(4,0);
         print("Tiration");
         HAL_Delay(3000);
         clear();
+
     } else if(clueNum == 2)
     {
-        char C2[100] = "# of blue chairs";
-        SerialPuts(C2);
+        //char C2[100] = "# of blue chairs";
+        //SerialPuts(C2);
 
-        setCursor(1,0);
-        print("Solve question");
-        setCursor(3,1);
-        print("on the board");
+        setCursor(0,0);
+        print("# of blue chairs");
         HAL_Delay(3000);
         clear();
+
     } else if(clueNum == 3)
     {
-        char C3[100] = "int a = 4; a = 3; std::cout<<a;";
-        SerialPuts(C3);
+        //char C3[100] = "int a = 4; a = 3; std::cout<<a;";
+        //SerialPuts(C3);
+
+        setCursor(0,0);
+        print("int a = 4; a = 3");
+        setCursor(1,1);
+        print("std::cout<<a;");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 4)
     {
-        char C4[100] = "# of working lightbulbs";
-        SerialPuts(C4);
+        //char C4[100] = "# of working lightbulbs";
+        //SerialPuts(C4);
+
+        setCursor(2,0);
+        print("# of working");
+        setCursor(3,1);
+        print("lightbulbs");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 5)
     {
-        char C5[100] = "How many vertices are in the shape of the nano tile?";
-        SerialPuts(C5);
+        //char C5[100] = "How many vertices are in the shape of the nano tile?";
+        //SerialPuts(C5);
+
+        setCursor(2,0);
+        print("# of vertices");
+        setCursor(0,1);
+        print("on the nano tile");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 6)
     {
-        char C6[100] = "I can grow on trees";
-        SerialPuts(C6);
+        //char C6[100] = "I can grow on trees";
+        //SerialPuts(C6);
+
+        setCursor(1,0);
+        print("I can grow on");
+        setCursor(5,1);
+        print("trees");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 7)
     {
-        char C7[100] = "You can't walk up me";
-        SerialPuts(C7);
+        //char C7[100] = "You can't walk up me";
+        //SerialPuts(C7);
+
+        setCursor(1,0);
+        print("You can't walk");
+        setCursor(5,1);
+        print("up me");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 8)
     {
-        char C8[100] = "Sugar cube";
-        SerialPuts(C8);
+        //char C8[100] = "Sugar cube";
+        //SerialPuts(C8);
+
+        setCursor(3,0);
+        print("Sugar cube");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 9)
     {
-        char C9[100] = "How many countries do you see?";
-        SerialPuts(C9);
+        //char C9[100] = "How many countries do you see?";
+        //SerialPuts(C9);
+
+        setCursor(1,0);
+        print("# of countries");
+        setCursor(4,1);
+        print("you see");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 10)
     {
-        char C10[100] = "Protect your head with me";
-        SerialPuts(C10);
+        //char C10[100] = "Protect your head with me";
+        //SerialPuts(C10);
+
+        setCursor(2,0);
+        print("Protect your");
+        setCursor(2,1);
+        print("head with me");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 11)
     {
-        char C11[100] = "I sound like a car";
-        SerialPuts(C11);
+        //char C11[100] = "I sound like a car";
+        //SerialPuts(C11);
+
+        setCursor(1,0);
+        print("I sound like a");
+        setCursor(6,1);
+        print("car");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 12)
     {
-        char C12[100] = "I'm smarted than you without a brain";
-        SerialPuts(C12);
+        //char C12[100] = "I'm smarted than you without a brain";
+        //SerialPuts(C12);
+
+        setCursor(2,0);
+        print("I'm smarter ");
+        setCursor(0,1);
+        print("without a brain");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 13)
     {
-        char C13[100] = "___ crash";
-        SerialPuts(C13);
+        //char C13[100] = "___ crash";
+        //SerialPuts(C13);
+
+        setCursor(3,0);
+        print("___ crash");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 14)
     {
-        char C14[100] = "I am you in the future";
-        SerialPuts(C14);
+        //char C14[100] = "I am you in the future";
+        //SerialPuts(C14);
+
+        setCursor(0,0);
+        print("I am you in the");
+        setCursor(5,1);
+        print("future");
+        HAL_Delay(3000);
+        clear();
+
+        
     } else if(clueNum == 15)
     {
-        char C15[100] = "Red set of paper";
-        SerialPuts(C15);
+        //char C15[100] = "Red set of paper";
+        //SerialPuts(C15);
+
+        setCursor(0,0);
+        print("Red set of paper");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 16)
     {
-        char C16[100] = "I keep you awake";
-        SerialPuts(C16);
+        //char C16[100] = "I keep you awake";
+        //SerialPuts(C16);
+
+        setCursor(0,0);
+        print("I keep you awake");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 17)
     {
-        char C17[100] = "We move you without you moving";
-        SerialPuts(C17);
+        //char C17[100] = "We move you without you moving";
+        //SerialPuts(C17);
+
+        setCursor(0,0);
+        print("Move you without");
+        setCursor(3,1);
+        print("you moving");
+        HAL_Delay(3000);
+        clear();
+
     } else if(clueNum == 18)
     {
-        char C18[100] = "You climb me to achieve goals";
-        SerialPuts(C18);
+        //char C18[100] = "You climb me to achieve goals";
+        //SerialPuts(C18);
+
+        setCursor(2,0);
+        print("Climb me to ");
+        setCursor(1,1);
+        print("achieve goals");
+        HAL_Delay(3000);
+        clear();
+
     } else
     {
-        char C19[100] = "Where engineers live";
-        SerialPuts(C19);
+        //char C19[100] = "Where engineers live";
+        //SerialPuts(C19);
+
+        setCursor(0,0);
+        print("Where engineers");
+        setCursor(6,1);
+        print("live");
+        HAL_Delay(3000);
+        clear();
     } // end if statements
 }
