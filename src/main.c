@@ -8,13 +8,7 @@
 // To run a particular example, you should remove the comment (//) in
 // front of exactly ONE of the following lines:
 
-// #define BUTTON_BLINK
-// #define LIGHT_SCHEDULER
-// #define TIME_RAND
-// #define KEYPAD
-// #define ROLLING_DICE
-// #define ROLL_GET_CLUE
-// #define KEYPAD_CONTROL
+
 
 #include "stm32f4xx_hal.h"
 #include "LiquidCrystal.h"
