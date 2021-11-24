@@ -236,9 +236,8 @@ int main(void)
     {
         //Initializations
         int numOfPlayers = 0, codeDoubleDigits = 0;
-        char codeCh[4], diceOutput[2], clueNum[2];
+        char codeCh[4], diceOutput[2];
         diceOutput[1]= ' ';
-        clueNum[1]= ' ';
         int code [4]; 
         bool checker = true, dice = true;
 
@@ -349,13 +348,7 @@ SerialPuts("\n");
             SerialPutc(codeCh[m]);
             SerialPuts("\n");
 
-            setCursor(2,0);
-            print("PASSWORD #:");
-            clueNum[0] = codeCh[m];
-            setCursor(7,1);
-            print(clueNum);
-            HAL_Delay(3000);
-            clear();
+            
 
 
 
@@ -486,7 +479,7 @@ SerialPuts("\n");
                 print("Press #");
                 HAL_Delay(3000);
                 clear();
-                
+
                 if(terminate())
                 {
                     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
