@@ -197,15 +197,15 @@ void SetPWMDutyCycle(TIM_HandleTypeDef *timer, uint32_t channel, uint32_t value)
 
 struct { GPIO_TypeDef *port; uint32_t pin; }
 rows[] = {
-    { GPIOA, GPIO_PIN_9 },
-    { GPIOA, GPIO_PIN_8 },
-    { GPIOB, GPIO_PIN_10 },
-    { GPIOB, GPIO_PIN_4 }
+    { GPIOA, GPIO_PIN_3 },
+    { GPIOA, GPIO_PIN_0 },
+    { GPIOA, GPIO_PIN_1 },
+    { GPIOA, GPIO_PIN_4 }
 },
 cols[] = {
-    { GPIOB, GPIO_PIN_5 },
-    { GPIOB, GPIO_PIN_3 },
-    { GPIOA, GPIO_PIN_10 }
+    { GPIOB, GPIO_PIN_0 },
+    { GPIOC, GPIO_PIN_1 },
+    { GPIOC, GPIO_PIN_0 }
 };
 
 void InitializeKeypad() {
