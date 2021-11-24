@@ -142,6 +142,26 @@ bool next_round()
     return false;
 }
 
+bool terminate(){
+    bool repeat = true;
+    InitializeKeypad();
+    while (ReadKeypad() < 0);   // wait for a valid key
+    while(repeat)
+    {
+        int key = ReadKeypad();
+        if (key == 11)  // TO PLAY AGAIN, CLICK '#' KEY
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }//end repeat game
+    while (ReadKeypad() >= 0);  // wait until key is released
+    return false;
+}
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -372,7 +392,7 @@ int main(void)
                 }//end for loop for FINAL GUESS
                 SerialPuts("\nGame Over");
                 SerialPuts("\nTo Play Again, Press #\n");
-                if(next_round())
+                if(terminate())
                 {
                     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
                     GAME = true;
@@ -380,7 +400,8 @@ int main(void)
                 else
                 {
                     GAME = false;
-            }//end play again if statement
+                    
+                }//end play again if statement
     }// ONE GAME
 
 
