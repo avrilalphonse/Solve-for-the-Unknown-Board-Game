@@ -171,33 +171,19 @@ int main(void)
     //SOLVE THE UNKNOWN
 
     //TESTING
-///*
+/*
     
     LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
 	
-	print("Hello, World!");
-	HAL_Delay(1000);
-	
-	while(1)
+	LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
+	bool test = true;
+    setCursor(1, 0);
+    print("Welcome to The");
+    setCursor(1,1);
+    print("Mystery of E7!");
+    HAL_Delay(3000);
+    while(test) //Code  inspired from: https://github.com/SayidHosseini/STM32LiquidCrystal/blob/master/examples/Scroll/main.c 
 	{
-		// scroll 13 positions (string length) to the left
-		// to move it offscreen left:
-		for (int positionCounter = 0; positionCounter < 13; positionCounter++) {
-			// scroll one position left:
-			scrollDisplayLeft();
-			// wait a bit:
-			HAL_Delay(350);
-		}
-
-		// scroll 29 positions (string length + display length) to the right
-		// to move it offscreen right:
-		for (int positionCounter = 0; positionCounter < 29; positionCounter++) {
-			// scroll one position right:
-			scrollDisplayRight();
-			// wait a bit:
-			HAL_Delay(350);
-		}
-
 		// scroll 16 positions (display length + string length) to the left
 		// to move it back to center:
 		for (int positionCounter = 0; positionCounter < 16; positionCounter++) {
@@ -209,9 +195,10 @@ int main(void)
 
 		// delay at the end of the full loop:
 		HAL_Delay(1000);
+        test = false;
 	}
 	
-//*/
+*/
 
 
     bool GAME = start_game();
