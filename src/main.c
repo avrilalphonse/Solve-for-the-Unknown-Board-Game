@@ -31,7 +31,7 @@ int get_number();
 int clue_number_sync(int codeNum);
 bool code_verify (char guess_code[], char codeCh []);
 bool next_round();
-
+void print_moving_screen();
 //void display_secret_code();
 
 #include <stdio.h>   // sprintf() function
@@ -162,13 +162,25 @@ bool terminate(){
     return false;
 }
 
-void print_screen(char screen1[], char screen2[]){
-    //bool test = true;
-    setCursor(1, 0);
-    print(screen1);
-    setCursor(1,1);
-    print(screen2);
-    HAL_Delay(3000);
+void print_moving_screen()
+{
+    bool test = true;
+    while(test) //Code  inspired from: https://github.com/SayidHosseini/STM32LiquidCrystal/blob/master/examples/Scroll/main.c 
+	{
+		// scroll 16 positions (display length + string length) to the left
+		// to move it back to center:
+		for (int positionCounter = 0; positionCounter < 16; positionCounter++) 
+        {
+		    // scroll one position left:
+		    scrollDisplayLeft();
+		    // wait a bit:
+	        HAL_Delay(350);
+		}
+        // delay at the end of the full loop:
+	    HAL_Delay(1000);
+        test = false;
+	}
+    clear();
 }
 
 int main(void)
@@ -200,53 +212,42 @@ int main(void)
     //SOLVE THE UNKNOWN
 
     //TESTING
-/*
-    
-    LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
+/*	
 	
-	bool test = true;
-    setCursor(1, 0);
-    print("Welcome to The");
-    setCursor(1,1);
-    print("Mystery of E7!");
-    HAL_Delay(3000);
-    while(test) //Code  inspired from: https://github.com/SayidHosseini/STM32LiquidCrystal/blob/master/examples/Scroll/main.c 
-	{
-		// scroll 16 positions (display length + string length) to the left
-		// to move it back to center:
-		for (int positionCounter = 0; positionCounter < 16; positionCounter++) {
-			// scroll one position left:
-			scrollDisplayLeft();
-			// wait a bit:
-			HAL_Delay(350);
-		}
-
-		// delay at the end of the full loop:
-		HAL_Delay(1000);
-        test = false;
-	}
 	
 */
     LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
     
+    setCursor(2,0);
+    print("Press any key");
+    setCursor(4,1);
+    print("to start");
+    HAL_Delay(3000);
     bool GAME = start_game();
+    clear();
 
     while(GAME)
     {
-        SerialPuts("Welcome to The Mystery of E7: Solve the Unknown!\nPlease enter the number of players: ");
-
-        // screen output
-        char screen1 [16] = "Please enter the";
-        char screen2 [16]= "# of players:";
-        print_screen(screen1, screen2);
-
         //Initializations
-        bool dice = true;
-        int numOfPlayers = 0;
+        int numOfPlayers = 0, codeDoubleDigits = 0;
         char codeCh[4];
         int code [4]; 
-        int codeDoubleDigits = 0;
-        bool checker = true;
+        bool checker = true, dice = true;
+
+        //Welcome Message LCD
+        setCursor(1, 0);
+        print("Welcome to The");
+        setCursor(1,1);
+        print("Mystery of E7!");
+        HAL_Delay(3000);
+        print_moving_screen();
+        
+        // screen output
+        setCursor(0,0);
+        print("Please enter the");
+        setCursor(1,1);
+        print("# of players:");
+        HAL_Delay(3000);
 
         numOfPlayers = num_of_players();
         
