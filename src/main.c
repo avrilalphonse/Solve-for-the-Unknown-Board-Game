@@ -54,8 +54,10 @@ char roll_the_dice()
 int num_of_players()
 {
     bool players = true;
-    char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
     int nums[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
+    char displayPlayers[2];
+    displayPlayers[1] = ' ';
 
     InitializeKeypad();
     while (players)
@@ -64,20 +66,25 @@ int num_of_players()
         int key = ReadKeypad();
         if (key != 9 && key != 10 && key != 11)  // in case if user clicks *, 0, #
         {
-            SerialPutc(keypadSymbols[key]); // output to console
-            SerialPuts("\n");
+SerialPutc(keypadSymbols[key]); // output to console
+            displayPlayers[0] = keypadSymbols[key];
+            setCursor(15,1);
+            print(displayPlayers);
+            HAL_Delay(1000);
+SerialPuts("\n");
+            clear();
             return nums[key];  // return int to loop 
             players = false;
         } else
         {
-            //SerialPuts("Invaid Number of Players. Re-enter:");
-            //SerialPuts("\n");
+            clear();
+SerialPuts("Invaid Number of Players. Re-enter:");
+SerialPuts("\n");
             setCursor(1,0);
             print("Invaid Number");
             setCursor(3,1);
             print("Re-enter:");
-            HAL_Delay(3000);
-            clear();
+            HAL_Delay(2000);
         }
         while (ReadKeypad() >= 0);  // wait until key is released
     }
@@ -247,7 +254,7 @@ int main(void)
         setCursor(1,1);
         print("Mystery of E7!");
         HAL_Delay(3000);
-        print_moving_screen();
+        //UNCOMMENT FOR FINAL print_moving_screen();
         
         //Number of Players LCD
         setCursor(0,0);
@@ -269,7 +276,7 @@ int main(void)
             //SerialPuts("\nRoll the dice!\n");
             setCursor(1,0);
             print("Roll the dice!");
-            HAL_Delay(1500);
+            HAL_Delay(3000);
             clear();
 
             for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
@@ -344,47 +351,40 @@ SerialPuts("\n");
             {
                 codeCh[m] = code[m] + '0';
             }
-            SerialPuts("PASSWORD #:");
-            SerialPutc(codeCh[m]);
-            SerialPuts("\n");
-
+SerialPuts("PASSWORD #:");
+SerialPutc(codeCh[m]);
+SerialPuts("\n");
             
-
-
-
             //Display Clue
-            SerialPuts("Clue #");
-            char clueNum = (m+1)+'0';
-            SerialPutc(clueNum);
-            SerialPuts(": ");
+SerialPuts("Clue #");
+char clueNum = (m+1)+'0';
+SerialPutc(clueNum);
+SerialPuts(": ");
             print_clue(codeNumForSync);
 
             bool hashtag = true;
             if(m == 3)
             {
-                SerialPuts("\nClick # to guess the code!");
-
+SerialPuts("\nClick # to guess the code!");
                 setCursor(0, 0);
                 print("Click # to guess");
                 setCursor(3,1);
                 print("the code!");
                 HAL_Delay(3000);
                 clear();
-
             } else
             {
-                SerialPuts("\nClick # for the next round!");
-
+SerialPuts("\nClick # for the next round!");
                 setCursor(0, 0);
                 print("Click # for the");
                 setCursor(2,1);
                 print("next round!");
                 HAL_Delay(3000);
                 clear();
-
             }
-            while (hashtag){
-                //hashtag = next_round();
+            print_clue(codeNumForSync);
+            while (hashtag)
+            {
                 if (next_round() == true)
                 {
                     hashtag = false;
@@ -396,9 +396,9 @@ SerialPuts("\n");
             }
         } //# of rounds loop
         
-                char guess_code [4];
-                char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
-                bool guessCheck = true;
+        char guess_code [4];
+        char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
+        bool guessCheck = true;
 
                 for(int j = 0; j < 3; j++) // 3 trials in total
                 {
