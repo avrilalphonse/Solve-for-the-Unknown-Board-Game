@@ -401,30 +401,27 @@ SerialPuts("\nClick # for the next round!");
             }
             //print_clue(codeNumForSync);
             //print_clue(codeNumForSync);
-           // while (hashtag)
-            //{
-              //  if (next_round() == true)
-                //{
-                   
-                  //  hashtag = false;
+           // 
                 //}
            // }
         } //# of rounds loop
         
         char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
         bool guessCheck = true;
-        char guess_code [4];
+        char guessCode[4];
+        guessCode[1] = ' ';
+        guessCode[2] = ' ';
+        guessCode[3] = ' ';
 
         for(int j = 0; j < 3; j++) // 3 trials in total
         {
 SerialPuts("\nEnter the 4-digit code to escape:");
 
+            clear();
             setCursor(1, 0);
             print("Enter 4-digit");
             setCursor(5,1);
-            print("code:");
-            HAL_Delay(3000);
-            clear();
+            print("code: ");
             for(int p = 0; p < 4; p++) // get 4-digit code from player
             {
                 InitializeKeypad();
@@ -434,18 +431,20 @@ SerialPuts("\nEnter the 4-digit code to escape:");
                     int key = ReadKeypad();
                     if(key >= 0)
                     {
-                        guess_code[p] = keypadSymbols[ReadKeypad()];
+                        guessCode[p] = keypadSymbols[ReadKeypad()];
                         guessCheck = false;
                     }
                     while (ReadKeypad() >= 0);  // wait until key is released
                 }
-SerialPutc(guess_code[p]);
+SerialPutc(guessCode[p]);
 SerialPuts("\n");
-
+                setCursor(11,1);
+                print(guessCode);
                 guessCheck = true;
             }//end for loop
-
-            if (code_verify(guess_code, codeCh))
+            HAL_Delay(3000);
+            clear();
+            if (code_verify(guessCode, codeCh))
             {
 SerialPuts ("You escaped!");
 
