@@ -70,8 +70,14 @@ int num_of_players()
             players = false;
         } else
         {
-            SerialPuts("Invaid Number of Players. Re-enter:");
-            SerialPuts("\n");
+            //SerialPuts("Invaid Number of Players. Re-enter:");
+            //SerialPuts("\n");
+            setCursor(1,0);
+            print("Invaid Number");
+            setCursor(3,1);
+            print("Re-enter:");
+            HAL_Delay(3000);
+            clear();
         }
         while (ReadKeypad() >= 0);  // wait until key is released
     }
@@ -321,7 +327,12 @@ int main(void)
             int codeNumForSync = 0;
             codeNumForSync = clue_number_sync(code[m]);
 
-            SerialPuts("\nNUM FOR  SYNC: ");
+            //SerialPuts("\nNUM FOR  SYNC: ");
+            setCursor(1,0);
+            print("NUM FOR SYNC:");
+            HAL_Delay(3000);
+            clear();
+
             char tempe[2];
             tempe[1] = codeNumForSync%10 + '0';
             tempe[0] = codeNumForSync/10 + '0';
@@ -533,14 +544,33 @@ void print_clue(int clueNum)
     {
         char C0[100] = "Solve the question on the board";
         SerialPuts(C0);
+
+        setCursor(1,0);
+        print("Solve question");
+        setCursor(3,1);
+        print("on the board");
+        HAL_Delay(3000);
+        clear();
     } else if(clueNum == 1)
     {
         char C1[100] = "Tiration";//;{'T', 'i', 'r'}
         SerialPuts(C1);
+
+        setCursor(4,0);
+        print("Tiration");
+        HAL_Delay(3000);
+        clear();
     } else if(clueNum == 2)
     {
         char C2[100] = "# of blue chairs";
         SerialPuts(C2);
+
+        setCursor(1,0);
+        print("Solve question");
+        setCursor(3,1);
+        print("on the board");
+        HAL_Delay(3000);
+        clear();
     } else if(clueNum == 3)
     {
         char C3[100] = "int a = 4; a = 3; std::cout<<a;";
