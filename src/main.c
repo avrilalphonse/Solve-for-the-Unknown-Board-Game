@@ -613,7 +613,7 @@ void print_clue(int clueNum)
         print("Solve question");
         setCursor(3,1);
         print("on the board");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 1)
@@ -623,7 +623,7 @@ void print_clue(int clueNum)
 
         setCursor(4,0);
         print("Tiration");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 2)
@@ -633,7 +633,7 @@ void print_clue(int clueNum)
 
         setCursor(0,0);
         print("# of blue chairs");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 3)
@@ -645,7 +645,7 @@ void print_clue(int clueNum)
         print("int a = 4; a = 3");
         setCursor(1,1);
         print("std::cout<<a;");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 4)
@@ -657,7 +657,7 @@ void print_clue(int clueNum)
         print("# of working");
         setCursor(3,1);
         print("lightbulbs");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 5)
@@ -669,7 +669,7 @@ void print_clue(int clueNum)
         print("# of vertices");
         setCursor(0,1);
         print("on the nano tile");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 6)
@@ -681,7 +681,7 @@ void print_clue(int clueNum)
         print("I can grow on");
         setCursor(5,1);
         print("trees");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 7)
@@ -693,7 +693,7 @@ void print_clue(int clueNum)
         print("You can't walk");
         setCursor(5,1);
         print("up me");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 8)
@@ -703,7 +703,7 @@ void print_clue(int clueNum)
 
         setCursor(3,0);
         print("Sugar cube");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 9)
@@ -715,7 +715,7 @@ void print_clue(int clueNum)
         print("# of countries");
         setCursor(4,1);
         print("you see");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 10)
@@ -727,7 +727,7 @@ void print_clue(int clueNum)
         print("Protect your");
         setCursor(2,1);
         print("head with me");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 11)
@@ -739,7 +739,7 @@ void print_clue(int clueNum)
         print("I sound like a");
         setCursor(6,1);
         print("car");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 12)
@@ -751,7 +751,7 @@ void print_clue(int clueNum)
         print("I'm smarter ");
         setCursor(0,1);
         print("without a brain");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 13)
@@ -761,7 +761,7 @@ void print_clue(int clueNum)
 
         setCursor(3,0);
         print("___ crash");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 14)
@@ -773,7 +773,7 @@ void print_clue(int clueNum)
         print("I am you in the");
         setCursor(5,1);
         print("future");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
         
@@ -784,7 +784,7 @@ void print_clue(int clueNum)
 
         setCursor(0,0);
         print("Red set of paper");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 16)
@@ -794,7 +794,7 @@ void print_clue(int clueNum)
 
         setCursor(0,0);
         print("I keep you awake");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 17)
@@ -806,7 +806,7 @@ void print_clue(int clueNum)
         print("Move you without");
         setCursor(3,1);
         print("you moving");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else if(clueNum == 18)
@@ -818,7 +818,7 @@ void print_clue(int clueNum)
         print("Climb me to ");
         setCursor(1,1);
         print("achieve goals");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
 
     } else
@@ -830,7 +830,7 @@ void print_clue(int clueNum)
         print("Where engineers");
         setCursor(6,1);
         print("live");
-        HAL_Delay(3000);
+        HAL_Delay(6000);
         clear();
     } // end if statements
 }
