@@ -441,7 +441,10 @@ SerialPuts("\n");
                     {
                         SerialPuts ("You escaped!");
 
-                        
+                        setCursor(2, 0);
+                        print("You escaped!");
+                        HAL_Delay(3000);
+                        clear();
 
                         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
                         j=3;
@@ -449,6 +452,12 @@ SerialPuts("\n");
                     else
                     {
                         SerialPuts("Try again!");
+
+                        setCursor(3, 0);
+                        print("Try again!");
+                        HAL_Delay(3000);
+                        clear();
+
                         for (int o = 0; o< 10; o++)
                         {
                             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -463,7 +472,21 @@ SerialPuts("\n");
                     }
                 }//end for loop for FINAL GUESS
                 SerialPuts("\nGame Over");
+
+                setCursor(3, 0);
+                print("Game Over");
+                HAL_Delay(3000);
+                clear();
+
                 SerialPuts("\nTo Play Again, Press #\n");
+
+                setCursor(1, 0);
+                print("To Play Again,");
+                setCursor(4, 0);
+                print("Press #");
+                HAL_Delay(3000);
+                clear();
+                
                 if(terminate())
                 {
                     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
