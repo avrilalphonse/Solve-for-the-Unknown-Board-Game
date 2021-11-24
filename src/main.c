@@ -162,6 +162,15 @@ bool terminate(){
     return false;
 }
 
+void print_screen(char screen1[], char screen2[]){
+    //bool test = true;
+    setCursor(1, 0);
+    print(screen1);
+    setCursor(1,1);
+    print(screen2);
+    HAL_Delay(3000);
+}
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -195,7 +204,6 @@ int main(void)
     
     LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
 	
-	LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
 	bool test = true;
     setCursor(1, 0);
     print("Welcome to The");
@@ -220,12 +228,17 @@ int main(void)
 	
 */
 
-
+    
     bool GAME = start_game();
 
     while(GAME)
     {
         SerialPuts("Welcome to The Mystery of E7: Solve the Unknown!\nPlease enter the number of players: ");
+
+        // screen output
+        char screen1 [16] = "Please enter the";
+        char screen2 [16]= "# of players:";
+        print_screen(screen1, screen2);
 
         //Initializations
         bool dice = true;
