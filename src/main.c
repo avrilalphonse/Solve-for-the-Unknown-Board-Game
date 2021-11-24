@@ -316,7 +316,7 @@ SerialPuts("\n");
         }//# of rounds loop
         
         bool hashtag = true;
-        SerialPutc("\nClick # button for the next round!");
+        SerialPuts("Click # button for the next round!");
         InitializeKeypad();
         int key = ReadKeypad();
         while (hashtag)
