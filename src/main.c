@@ -29,7 +29,7 @@ void print_clue(int clueNum);
 bool start_game();
 int get_number();
 int clue_number_sync(int codeNum);
-bool code_verify (char guess_code[], char codeCh []);
+bool code_verify (char guessCode[], char codeCh []);
 bool next_round();
 void print_moving_screen();
 //void display_secret_code();
@@ -57,7 +57,7 @@ int num_of_players()
     int nums[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
     char displayPlayers[2];
-    displayPlayers[1] = ' ';
+    displayPlayers[0] = ' ';
 
     InitializeKeypad();
     while (players)
@@ -67,11 +67,10 @@ int num_of_players()
         if (key != 9 && key != 10 && key != 11)  // in case if user clicks *, 0, #
         {
 SerialPutc(keypadSymbols[key]); // output to console
-            displayPlayers[0] = keypadSymbols[key];
-            setCursor(15,1);
+            displayPlayers[1] = keypadSymbols[key];
+            setCursor(14,1);
             print(displayPlayers);
             HAL_Delay(1000);
-SerialPuts("\n");
             clear();
             return nums[key];  // return int to loop 
             players = false;
@@ -128,10 +127,10 @@ int clue_number_sync(int codeNum)
     return numForClue;
 }
 
-bool code_verify (char guess_code[], char codeCh [])
+bool code_verify (char guessCode[], char codeCh [])
 {
     for (int i = 0; i < 3; i++){
-        if (guess_code[i] != codeCh[i]){
+        if (guessCode[i] != codeCh[i]){
             return false;
         }
     }
@@ -405,17 +404,18 @@ SerialPuts("\nClick # for the next round!");
                 //}
            // }
         } //# of rounds loop
-        
+        setCursor(14, 1);
+        print("  ");
         char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
         bool guessCheck = true;
         char guessCode[4];
-        guessCode[1] = ' ';
-        guessCode[2] = ' ';
-        guessCode[3] = ' ';
 
         for(int j = 0; j < 3; j++) // 3 trials in total
         {
 SerialPuts("\nEnter the 4-digit code to escape:");
+            guessCode[1] = ' ';
+            guessCode[2] = ' ';
+            guessCode[3] = ' ';
 
             clear();
             setCursor(1, 0);
@@ -457,10 +457,10 @@ SerialPuts ("You escaped!");
                 j=3;
             } else
             {
-                SerialPuts("Try again!");
+SerialPuts("Not quite");
 
                 setCursor(3, 0);
-                print("Try again!");
+                print("Not quite");
                 HAL_Delay(3000);
                 clear();
 
@@ -480,27 +480,27 @@ SerialPuts ("You escaped!");
 SerialPuts("\nGame Over");
                 
         setCursor(3, 0);
-        print("Game Over");
-        HAL_Delay(3000);
+        print("Game Over.");
+        HAL_Delay(4000);
         clear();
 
  SerialPuts("\nTo Play Again, Press #\n");
 
         setCursor(1, 0);
         print("To Play Again,");
-        setCursor(4, 0);
+        setCursor(4, 1);
         print("Press #");
-        HAL_Delay(3000);
-        clear();
-                
         if(terminate())
         {
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
             GAME = true;
         } else
         {
+            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
             GAME = false;     
         }//end play again if statement
+        HAL_Delay(3000);
+        clear();
     }// ONE GAME
 
 
