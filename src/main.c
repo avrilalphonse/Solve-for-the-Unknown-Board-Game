@@ -30,7 +30,7 @@ bool start_game();
 int get_number();
 int clue_number_sync(int codeNum);
 bool code_verify (char guess_code[], char codeCh []);
-bool play_again();
+bool next_round();
 
 //void display_secret_code();
 
@@ -125,7 +125,7 @@ bool code_verify (char guess_code[], char codeCh [])
     return true;
 }
 
-bool play_again()
+bool next_round()
 {
     bool repeat = true;
     InitializeKeypad();
@@ -221,95 +221,100 @@ int main(void)
 
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
-            SerialPuts("\n");
-            for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
+            bool hashtag = true;
+            while (hashtag)
             {
-                InitializeKeypad();
-                while (ReadKeypad() < 0);   // wait for a valid key
-                while(dice)
+                SerialPuts("\n");
+                for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
                 {
-                    int key = ReadKeypad();
-                    if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
+                    InitializeKeypad();
+                    while (ReadKeypad() < 0);   // wait for a valid key
+                    while(dice)
                     {
-                    //
-                        SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
-                        SerialPuts("\n");
-                        dice = false;
-                    }
-                }//end rolling dice
-                while (ReadKeypad() >= 0);  // wait until key is released
-                dice = true;
-            }// # of players rolling dice
+                        int key = ReadKeypad();
+                        if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
+                        {
+                        //
+                            SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
+                            SerialPuts("\n");
+                            dice = false;
+                        }
+                    }//end rolling dice
+                    while (ReadKeypad() >= 0);  // wait until key is released
+                    dice = true;
+                }// # of players rolling dice
 
-            //Storing Integer Values of Code/Password
-            code[m] = get_number();
-            while(checker)
-            {
-                if (m == 0) 
+                //Storing Integer Values of Code/Password
+                code[m] = get_number();
+                while(checker)
                 {
-                    checker = false;
-                } else if(m == 1)// m > 0 //code[m] != code[m-1]
-                {
-                    if(code[m] != code[m-1])
+                    if (m == 0) 
+                    {
                         checker = false;
-                    else
-                        code[m] = get_number();
-                } else if(m == 2)
+                    } else if(m == 1)// m > 0 //code[m] != code[m-1]
+                    {
+                        if(code[m] != code[m-1])
+                            checker = false;
+                        else
+                            code[m] = get_number();
+                    } else if(m == 2)
+                    {
+                        if(code[m] != code[m-1] && code[m] != code[m-2])
+                            checker = false;
+                        else
+                            code[m] = get_number();
+                    } else
+                    {
+                        if(code[m] != code[m-1] && code[m] != code[m-2] && code[m] != code[m-3])
+                            checker = false;
+                        else
+                            code[m] = get_number();
+                    }//end assigning int values for the 4-digit code
+                }
+                checker = true;
+
+                int codeNumForSync = 0;
+                codeNumForSync = clue_number_sync(code[m]);
+
+                SerialPuts("\nNUM FOR  SYNC: ");
+                char tempe[2];
+                tempe[1] = codeNumForSync%10 + '0';
+                tempe[0] = codeNumForSync/10 + '0';
+                SerialPutc(tempe[0]);
+                SerialPutc(tempe[1]);
+                SerialPuts("\n");
+
+                //storing values as characters for final display
+                if(code[m] > 9)
                 {
-                    if(code[m] != code[m-1] && code[m] != code[m-2])
-                        checker = false;
-                    else
-                        code[m] = get_number();
+                    codeDoubleDigits = code[m] - 10;
+                    codeCh[m] = codeDoubleDigits + '0';
                 } else
                 {
-                    if(code[m] != code[m-1] && code[m] != code[m-2] && code[m] != code[m-3])
-                        checker = false;
-                    else
-                        code[m] = get_number();
-                }//end assigning int values for the 4-digit code
+                    codeCh[m] = code[m] + '0';
+                }
+                SerialPuts("PASSWORD #:");
+                SerialPutc(codeCh[m]);
+                SerialPuts("\n");
+
+                //Display Clue
+                SerialPuts("Clue #");
+                char clueNum = (m+1)+'0';
+                SerialPutc(clueNum);
+                SerialPuts(": ");
+                print_clue(codeNumForSync);
+
+                if(next_round() == false)
+                {
+                    hashtag = false;
+                }
+                else
+                {
+                    hashtag = true;
+                }
             }
-            checker = true;
-
-            int codeNumForSync = 0;
-            codeNumForSync = clue_number_sync(code[m]);
-
-SerialPuts("\nNUM FOR  SYNC: ");
-char tempe[2];
-tempe[1] = codeNumForSync%10 + '0';
-tempe[0] = codeNumForSync/10 + '0';
-SerialPutc(tempe[0]);
-SerialPutc(tempe[1]);
-SerialPuts("\n");
-
-            //storing values as characters for final display
-            if(code[m] > 9)
-            {
-                codeDoubleDigits = code[m] - 10;
-                codeCh[m] = codeDoubleDigits + '0';
-            } else
-            {
-                codeCh[m] = code[m] + '0';
-            }
-            SerialPuts("PASSWORD #:");
-            SerialPutc(codeCh[m]);
-            SerialPuts("\n");
-
-            //Display Clue
-            SerialPuts("Clue #");
-            char clueNum = (m+1)+'0';
-            SerialPutc(clueNum);
-            SerialPuts(": ");
-            print_clue(codeNumForSync);
-        }//# of rounds loop
+        } //# of rounds loop
         
-        bool hashtag = true;
-        SerialPuts("Click # button for the next round!");
-        InitializeKeypad();
-        int key = ReadKeypad();
-        while (hashtag)
-        {
-            if(key == 11)
-            {
                 char guess_code [4];
                 char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
                 bool guessCheck = true;
@@ -336,7 +341,8 @@ SerialPuts("\n");
                         guessCheck = true;
                     }
 
-                    if (code_verify(guess_code, codeCh)){
+                    if (code_verify(guess_code, codeCh))
+                    {
                         SerialPuts ("You escaped!");
                         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
                         j=3;
@@ -359,21 +365,15 @@ SerialPuts("\n");
                 }//end for loop for FINAL GUESS
                 SerialPuts("\nGame Over");
                 SerialPuts("\nTo Play Again, Press #\n");
-                if(play_again())
+                if(next_round())
                 {
                     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
                     GAME = true;
-                } else
+                }
+                else
                 {
                     GAME = false;
-                }//end play again if statement
-            }
-            else
-            {
-                hashtag = false;
-            }
-        }
-        hashtag = false;
+            }//end play again if statement
     }// ONE GAME
 
 
