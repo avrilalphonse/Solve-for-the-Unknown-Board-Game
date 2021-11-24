@@ -213,7 +213,7 @@ int main(void)
 	
 //*/
 
-/*
+
     bool GAME = start_game();
 
     while(GAME)
@@ -315,66 +315,77 @@ SerialPuts("\n");
             print_clue(codeNumForSync);
         }//# of rounds loop
         
-        char guess_code [4];
-        char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
-        bool guessCheck = true;
-
-        for(int j = 0; j < 3; j++) // 3 trials in total
+        bool hashtag = true;
+        SerialPutc("\nClick # button for the next round!");
+        InitializeKeypad();
+        int key = ReadKeypad();
+        while (hashtag)
         {
-            SerialPuts("\nEnter the 4-digit code to escape:");
-            for(int p = 0; p < 4; p++) // get 4-digit code from player
+            if(key == 11)
             {
-                InitializeKeypad();
-                while (guessCheck)
+                char guess_code [4];
+                char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
+                bool guessCheck = true;
+
+                for(int j = 0; j < 3; j++) // 3 trials in total
                 {
-                    while (ReadKeypad() < 0);   // wait for a valid key
-                    int key = ReadKeypad();
-                    if(key >= 0)
+                    SerialPuts("\nEnter the 4-digit code to escape:");
+                    for(int p = 0; p < 4; p++) // get 4-digit code from player
                     {
-                        guess_code[p] = keypadSymbols[ReadKeypad()];
-                        guessCheck = false;
+                        InitializeKeypad();
+                        while (guessCheck)
+                        {
+                            while (ReadKeypad() < 0);   // wait for a valid key
+                            int key = ReadKeypad();
+                            if(key >= 0)
+                            {
+                                guess_code[p] = keypadSymbols[ReadKeypad()];
+                                guessCheck = false;
+                            }
+                            while (ReadKeypad() >= 0);  // wait until key is released
+                        }
+                        SerialPutc(guess_code[p]);
+                        SerialPuts("\n");
+                        guessCheck = true;
                     }
-                    while (ReadKeypad() >= 0);  // wait until key is released
-                }
-                SerialPutc(guess_code[p]);
-                SerialPuts("\n");
-                guessCheck = true;
-            }
 
-            if (code_verify(guess_code, codeCh)){
-                SerialPuts ("You escaped!");
-                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
-                j=3;
-            }
-            else
-            {
-                SerialPuts("Try again!");
-                for (int o = 0; o< 10; o++)
+                    if (code_verify(guess_code, codeCh)){
+                        SerialPuts ("You escaped!");
+                        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
+                        j=3;
+                    }
+                    else
+                    {
+                        SerialPuts("Try again!");
+                        for (int o = 0; o< 10; o++)
+                        {
+                            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                            if(j == 2)
+                            {
+                                HAL_Delay(200);
+                            } else
+                            {
+                                HAL_Delay(300); 
+                            }//if statement for LED blinking speed
+                        }
+                    }
+                }//end for loop for FINAL GUESS
+                SerialPuts("\nGame Over");
+                SerialPuts("\nTo Play Again, Press #\n");
+                if(play_again())
                 {
-                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-                    if(j == 2)
-                    {
-                        HAL_Delay(200);
-                    } else
-                    {
-                        HAL_Delay(300); 
-                    }//if statement for LED blinking speed
-                }
+                    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
+                    GAME = true;
+                } else
+                {
+                    GAME = false;
+                }//end play again if statement
             }
-        }//end for loop for FINAL GUESS
-        SerialPuts("\nGame Over");
-        SerialPuts("\nTo Play Again, Press #\n");
-        if(play_again())
-        {
-            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
-            GAME = true;
-        } else
-        {
-            GAME = false;
-        }//end play again if statement
+            
+        }
     }// ONE GAME
 
-*/
+
 
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
