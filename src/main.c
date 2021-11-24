@@ -248,14 +248,22 @@ int main(void)
         setCursor(1,1);
         print("# of players:");
         HAL_Delay(3000);
+        clear();
 
         numOfPlayers = num_of_players();
         
-        SerialPuts("Let's start...");
+        //SerialPuts("Let's start...");
+        setCursor(3,0);
+        print("Let's start");
+        clear();
 
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
-            SerialPuts("\nRoll the dice!\n");
+            //SerialPuts("\nRoll the dice!\n");
+            setCursor(1,0);
+            print("Roll the dice!");
+            clear();
+
             for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
             {
                 InitializeKeypad();
@@ -266,8 +274,11 @@ int main(void)
                     if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
                     {
                     //
-                        SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
-                        SerialPuts("\n");
+                        //SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
+                        //SerialPuts("\n");
+                        setCursor(7,0);
+                        print(roll_the_dice());
+                        clear();
                         dice = false;
                     }
                 }//end rolling dice
