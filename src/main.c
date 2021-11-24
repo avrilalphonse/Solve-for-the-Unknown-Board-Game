@@ -217,11 +217,11 @@ int main(void)
 
         numOfPlayers = num_of_players();
         
-        SerialPuts("Let's start... Roll the dice!");
+        SerialPuts("Let's start...");
 
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
-            SerialPuts("\n");
+            SerialPuts("\nRoll the dice!\n");
             for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
             {
                 InitializeKeypad();
@@ -302,10 +302,16 @@ int main(void)
             print_clue(codeNumForSync);
 
             bool hashtag = true;
+            if(m == 3)
+            {
+                SerialPuts("\nClick # to guess the code!");
+            } else
+            {
+                SerialPuts("\nClick # for the next round!");
+            }
             while (hashtag){
-                SerialPuts("Click # for the next round!");
-                hashtag = next_round();
-                if (next_round() == false)
+                //hashtag = next_round();
+                if (next_round() == true)
                 {
                     hashtag = false;
                 } 
