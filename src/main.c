@@ -236,8 +236,9 @@ int main(void)
     {
         //Initializations
         int numOfPlayers = 0, codeDoubleDigits = 0;
-        char codeCh[4], diceOutput[2];
+        char codeCh[4], diceOutput[2], clueNum[2];
         diceOutput[1]= ' ';
+        clueNum[1]= ' ';
         int code [4]; 
         bool checker = true, dice = true;
 
@@ -281,7 +282,6 @@ int main(void)
                     int key = ReadKeypad();
                     if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
                     {
-                    //
                         //SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
                         //SerialPuts("\n");
                         diceOutput[0] = roll_the_dice();
@@ -349,6 +349,16 @@ SerialPuts("\n");
             SerialPutc(codeCh[m]);
             SerialPuts("\n");
 
+            setCursor(2,0);
+            print("PASSWORD #:");
+            clueNum[0] = codeCh[m];
+            setCursor(7,1);
+            print(clueNum);
+            HAL_Delay(3000);
+            clear();
+
+
+
             //Display Clue
             SerialPuts("Clue #");
             char clueNum = (m+1)+'0';
@@ -360,9 +370,25 @@ SerialPuts("\n");
             if(m == 3)
             {
                 SerialPuts("\nClick # to guess the code!");
+
+                setCursor(0, 0);
+                print("Click # to guess");
+                setCursor(3,1);
+                print("the code!");
+                HAL_Delay(3000);
+                clear();
+
             } else
             {
                 SerialPuts("\nClick # for the next round!");
+
+                setCursor(0, 0);
+                print("Click # for the");
+                setCursor(2,1);
+                print("next round!");
+                HAL_Delay(3000);
+                clear();
+
             }
             while (hashtag){
                 //hashtag = next_round();
@@ -384,6 +410,14 @@ SerialPuts("\n");
                 for(int j = 0; j < 3; j++) // 3 trials in total
                 {
                     SerialPuts("\nEnter the 4-digit code to escape:");
+
+                    setCursor(1, 0);
+                    print("Enter 4-digit");
+                    setCursor(5,1);
+                    print("code:");
+                    HAL_Delay(3000);
+                    clear();
+
                     for(int p = 0; p < 4; p++) // get 4-digit code from player
                     {
                         InitializeKeypad();
@@ -406,6 +440,9 @@ SerialPuts("\n");
                     if (code_verify(guess_code, codeCh))
                     {
                         SerialPuts ("You escaped!");
+
+                        
+
                         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
                         j=3;
                     }
