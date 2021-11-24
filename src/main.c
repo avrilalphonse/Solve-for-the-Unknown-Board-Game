@@ -66,8 +66,8 @@ int num_of_players()
         int key = ReadKeypad();
         if (key != 9 && key != 10 && key != 11)  // in case if user clicks *, 0, #
         {
-SerialPutc(keypadSymbols[key]); // output to console
             displayPlayers[1] = keypadSymbols[key];
+            //output to LCD
             setCursor(14,1);
             print(displayPlayers);
             HAL_Delay(1000);
@@ -77,8 +77,6 @@ SerialPutc(keypadSymbols[key]); // output to console
         } else
         {
             clear();
-SerialPuts("Invaid Number of Players. Re-enter:");
-SerialPuts("\n");
             setCursor(1,0);
             print("Invaid Number");
             setCursor(3,1);
@@ -264,7 +262,6 @@ int main(void)
         HAL_Delay(3000);
         clear();
         
-        //SerialPuts("Let's start...");
         setCursor(3,0);
         print("Let's start");
         HAL_Delay(3000);
@@ -272,7 +269,6 @@ int main(void)
 
         for(int m = 0; m < 4; ++m) // FOUR TURNS -> FOUR CLUES
         {
-            //SerialPuts("\nRoll the dice!\n");
             setCursor(1,0);
             print("Roll the dice!");
             HAL_Delay(3000);
@@ -287,9 +283,8 @@ int main(void)
                     int key = ReadKeypad();
                     if (key == 9)  // TO ROLL DICE, CLICK '*' KEY
                     {
-                        //SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
-                        //SerialPuts("\n");
                         diceOutput[0] = roll_the_dice();
+                        // ROLLING DICE & OUTPUT NUM TO LCD
                         setCursor(7,0);
                         print(diceOutput);
                         HAL_Delay(3000);
@@ -332,14 +327,6 @@ int main(void)
 
             int codeNumForSync = 0;
             codeNumForSync = clue_number_sync(code[m]);
-//debug
-SerialPuts("\nNUM FOR  SYNC: ");
-char tempe[2];
-tempe[1] = codeNumForSync%10 + '0';
-tempe[0] = codeNumForSync/10 + '0';
-SerialPutc(tempe[0]);
-SerialPutc(tempe[1]);
-SerialPuts("\n");
 
             //storing values as characters for final display
             if(code[m] > 9)
@@ -350,23 +337,14 @@ SerialPuts("\n");
             {
                 codeCh[m] = code[m] + '0';
             }
-SerialPuts("PASSWORD #:");
-SerialPutc(codeCh[m]);
-SerialPuts("\n");
-            
+
             //Display Clue
-SerialPuts("Clue #");
-char clueNum = (m+1)+'0';
-SerialPutc(clueNum);
-SerialPuts(": ");
             print_clue(codeNumForSync);
 
             bool hashtag = true;
             if(m == 3)
             {
-
-SerialPuts("\nClick # to guess the code!");
-
+                //Display Move to Guess Code Msg
                 setCursor(0, 0);
                 print("Click # to guess");
                 setCursor(3,1);
@@ -383,7 +361,7 @@ SerialPuts("\nClick # to guess the code!");
                 clear();
             } else
             {
-SerialPuts("\nClick # for the next round!");
+                //Display Move to Next Round Msg
                 setCursor(0, 0);
                 print("Click # for the");
                 setCursor(2,1);
@@ -398,24 +376,19 @@ SerialPuts("\nClick # for the next round!");
                 HAL_Delay(3000);
                 clear();
             }
-            //print_clue(codeNumForSync);
-            //print_clue(codeNumForSync);
-           // 
-                //}
-           // }
         } //# of rounds loop
-        setCursor(14, 1);
-        print("  ");
+        
         char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
         bool guessCheck = true;
-        char guessCode[4];
+        char guessCode[5];
 
         for(int j = 0; j < 3; j++) // 3 trials in total
         {
-SerialPuts("\nEnter the 4-digit code to escape:");
+            //Initializing Values to ' ' to print to LCD
             guessCode[1] = ' ';
             guessCode[2] = ' ';
             guessCode[3] = ' ';
+            guessCode[4] = ' ';
 
             clear();
             setCursor(1, 0);
@@ -436,8 +409,7 @@ SerialPuts("\nEnter the 4-digit code to escape:");
                     }
                     while (ReadKeypad() >= 0);  // wait until key is released
                 }
-SerialPutc(guessCode[p]);
-SerialPuts("\n");
+
                 setCursor(11,1);
                 print(guessCode);
                 guessCheck = true;
@@ -446,8 +418,6 @@ SerialPuts("\n");
             clear();
             if (code_verify(guessCode, codeCh))
             {
-SerialPuts ("You escaped!");
-
                 setCursor(2, 0);
                 print("You escaped!");
                 HAL_Delay(3000);
@@ -457,8 +427,6 @@ SerialPuts ("You escaped!");
                 j=3;
             } else
             {
-SerialPuts("Not quite");
-
                 setCursor(3, 0);
                 print("Not quite");
                 HAL_Delay(3000);
@@ -476,15 +444,11 @@ SerialPuts("Not quite");
                     }//if statement for LED blinking speed
                 }
             }
-        }//end for loop for FINAL GUESS
-SerialPuts("\nGame Over");
-                
+        }//end for loop for FINAL GUESS                
         setCursor(3, 0);
         print("Game Over.");
         HAL_Delay(4000);
         clear();
-
- SerialPuts("\nTo Play Again, Press #\n");
 
         setCursor(1, 0);
         print("To Play Again,");
@@ -752,9 +716,6 @@ void print_clue(int clueNum)
 
     } else if(clueNum == 13)
     {
-        //char C13[100] = "___ crash";
-        //SerialPuts(C13);
-
         setCursor(3,0);
         print("___ crash");
         HAL_Delay(6000);
