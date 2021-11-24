@@ -236,7 +236,8 @@ int main(void)
     {
         //Initializations
         int numOfPlayers = 0, codeDoubleDigits = 0;
-        char codeCh[4];
+        char codeCh[4], diceOutput[2];
+        diceOutput[1]= ' ';
         int code [4]; 
         bool checker = true, dice = true;
 
@@ -248,15 +249,14 @@ int main(void)
         HAL_Delay(3000);
         print_moving_screen();
         
-        // screen output
+        //Number of Players LCD
         setCursor(0,0);
         print("Please enter the");
         setCursor(1,1);
         print("# of players:");
+        numOfPlayers = num_of_players();
         HAL_Delay(3000);
         clear();
-
-        numOfPlayers = num_of_players();
         
         //SerialPuts("Let's start...");
         setCursor(3,0);
@@ -269,7 +269,7 @@ int main(void)
             //SerialPuts("\nRoll the dice!\n");
             setCursor(1,0);
             print("Roll the dice!");
-            HAL_Delay(3000);
+            HAL_Delay(1500);
             clear();
 
             for(int k = 0; k < numOfPlayers; ++k) // players all roll dice
@@ -284,8 +284,9 @@ int main(void)
                     //
                         //SerialPutc(roll_the_dice());   // ROLLING DICE & OUTPUT NUM TO CONSOLE
                         //SerialPuts("\n");
+                        diceOutput[0] = roll_the_dice();
                         setCursor(7,0);
-                        print(roll_the_dice());
+                        print(diceOutput);
                         HAL_Delay(3000);
                         clear();
                         dice = false;
@@ -326,19 +327,14 @@ int main(void)
 
             int codeNumForSync = 0;
             codeNumForSync = clue_number_sync(code[m]);
-
-            //SerialPuts("\nNUM FOR  SYNC: ");
-            setCursor(1,0);
-            print("NUM FOR SYNC:");
-            HAL_Delay(3000);
-            clear();
-
-            char tempe[2];
-            tempe[1] = codeNumForSync%10 + '0';
-            tempe[0] = codeNumForSync/10 + '0';
-            SerialPutc(tempe[0]);
-            SerialPutc(tempe[1]);
-            SerialPuts("\n");
+//debug
+SerialPuts("\nNUM FOR  SYNC: ");
+char tempe[2];
+tempe[1] = codeNumForSync%10 + '0';
+tempe[0] = codeNumForSync/10 + '0';
+SerialPutc(tempe[0]);
+SerialPutc(tempe[1]);
+SerialPuts("\n");
 
             //storing values as characters for final display
             if(code[m] > 9)
