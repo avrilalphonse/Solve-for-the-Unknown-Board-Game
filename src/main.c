@@ -365,11 +365,21 @@ SerialPuts(": ");
             bool hashtag = true;
             if(m == 3)
             {
+
 SerialPuts("\nClick # to guess the code!");
+
                 setCursor(0, 0);
                 print("Click # to guess");
                 setCursor(3,1);
                 print("the code!");
+                while(hashtag)
+                {
+                    if (next_round() == true)
+                    {
+                    
+                        hashtag = false;
+                    }
+                }
                 HAL_Delay(3000);
                 clear();
             } else
@@ -379,21 +389,26 @@ SerialPuts("\nClick # for the next round!");
                 print("Click # for the");
                 setCursor(2,1);
                 print("next round!");
+                while (hashtag)
+                {
+                    if (next_round() == true)
+                    {
+                        hashtag = false;
+                    }
+                }
                 HAL_Delay(3000);
                 clear();
             }
-            print_clue(codeNumForSync);
-            while (hashtag)
-            {
-                if (next_round() == true)
-                {
-                    hashtag = false;
-                } 
-                else
-                {
-                    hashtag = true;
-                } 
-            }
+            //print_clue(codeNumForSync);
+            //print_clue(codeNumForSync);
+           // while (hashtag)
+            //{
+              //  if (next_round() == true)
+                //{
+                   
+                  //  hashtag = false;
+                //}
+           // }
         } //# of rounds loop
         
         char guess_code [4];
