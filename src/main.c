@@ -22,6 +22,8 @@ bool next_round();
 void print_moving_screen();
 
 char roll_the_dice()
+// Function called roll_the_dice that generates random number from 1 to 6
+// it returns the character value of the random number
 {
     int high = 6, low = 1;
     srand(HAL_GetTick());
@@ -31,6 +33,8 @@ char roll_the_dice()
 }
 
 int num_of_players()
+// Function called num_of_numbers that recieve input from user, the number of players
+// it displays the number of players on the screen, and if user inputs the invalid number, it makes them to input again
 {
     bool players = true;
     int nums[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -68,6 +72,7 @@ int num_of_players()
 }
 
 bool start_game()
+// Function that startts the game when user clicks any button from the keypad
 {
     bool begin = true;
     InitializeKeypad();
@@ -85,6 +90,8 @@ bool start_game()
 }
 
 int get_number()
+// Function named get_number that get a random number from 0 to 19
+// This number choose the clueNum that will provide to user
 {
     int high = 19, low = 0;
     int ret_Val = 0;
@@ -95,14 +102,15 @@ int get_number()
     return ret_Val;
 }
 
-int clue_number_sync(int codeNum)
+int clue_number_csyn(int codeNum)
 {
     int numForClue = 0;
     numForClue = codeNum;
     return numForClue;
 }
 
-bool code_verify (char guessCode[], char codeCh [])
+bool code_verify (char guessCode[], char codeCh []) 
+// Function code_verify compares if the answer and the guessed code by user are same
 {
     for (int i = 0; i < 3; i++){
         if (guessCode[i] != codeCh[i]){
@@ -113,6 +121,9 @@ bool code_verify (char guessCode[], char codeCh [])
 }
 
 bool next_round()
+// Function called next_round that goes to the next round to roll a dice again and get new clues
+// Through this function, it provides more time for user to guess clues.
+// Also, if the user click hashtag, it will go to the next round, and otherwise it will not do anything
 {
     bool repeat = true;
     InitializeKeypad();
@@ -129,7 +140,10 @@ bool next_round()
     return false;
 }
 
-bool terminate(){
+bool terminate()
+// Function called terminate that restarts the game when user clicks the hashtag button, and ends the game when 
+// the user clicks the other buttons
+{ 
     bool repeat = true;
     InitializeKeypad();
     while (ReadKeypad() < 0);   // wait for a valid key
@@ -142,14 +156,15 @@ bool terminate(){
         }
         else
         {
-            return false;
+            return false; 
         }
     }//end repeat game
     while (ReadKeypad() >= 0);  // wait until key is released
     return false;
 }
 
-void print_moving_screen()
+void print_moving_screen() 
+// Function named print_moving_screen, it helps the printed sentences to move to the left side
 {
     bool test = true;
     while(test) //Code  inspired from: https://github.com/SayidHosseini/STM32LiquidCrystal/blob/master/examples/Scroll/main.c 
@@ -438,11 +453,14 @@ int main(void)
 // This function is called by the HAL once every millisecond
 void SysTick_Handler(void)
 {
-    HAL_IncTick(); // tell HAL that a new tick has happened
+    HAL_IncTick(); 
+    // tell HAL that a new tick has happened
     // we can do other things in here too if we need to, but be careful
 }
 
-void print_clue(int clueNum)
+void print_clue(int clueNum) 
+// Function called print_clue, that gets a value of clueNum which is a randomly generated number from 0 to 19
+// As it gets the number from main, it prints the clue to the screen that corresponds to the clue number.
 {
     //MATCHING INT NUM WITH ACCORDING CLUE
     if(clueNum == 0)
