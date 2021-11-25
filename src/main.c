@@ -1,20 +1,14 @@
-// Sample code for ECE 198
-
-// Written by Bernie Roehl, August 2021
-
-// This file contains code for a number of different examples.
-// Each one is surrounded by an #ifdef ... #endif block inside of main().
-
-// To run a particular example, you should remove the comment (//) in
-// front of exactly ONE of the following lines:
-
-
+// FINAL CODE FOR GROUP 39
 
 #include "stm32f4xx_hal.h"
 #include "LiquidCrystal.h"
 #include "ece198.h"
 
 #include <stdbool.h> // booleans, i.e. true and false
+#include <stdio.h>   // sprintf() function
+#include <stdlib.h>  // srand() and random() functions
+#include <time.h> // for random num generator
+#include <stdlib.h> // for random num generator
 
 //FUNCTIONS
 char roll_the_dice();
@@ -26,23 +20,14 @@ int clue_number_sync(int codeNum);
 bool code_verify (char guessCode[], char codeCh []);
 bool next_round();
 void print_moving_screen();
-//void display_secret_code();
-
-#include <stdio.h>   // sprintf() function
-#include <stdlib.h>  // srand() and random() functions
-#include <time.h> // for random num generator
-#include <stdlib.h> // for random num generator
 
 char roll_the_dice()
 {
-    //srand (time(0)); //seed
-    //char *dice_numbers = "123456";
     int high = 6, low = 1;
     srand(HAL_GetTick());
     int r = (rand() % (high + 1 - low)) + low;
     char charVal = r + '0';
-    return (charVal); //dice_numbers[rand() %6]
-     
+    return (charVal); 
 }
 
 int num_of_players()
@@ -107,9 +92,7 @@ int get_number()
     int r = (rand() % (high + 1 - low)) + low;
     int clueNumArr[20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
     ret_Val = clueNumArr[r];
-
     return ret_Val;
-    
 }
 
 int clue_number_sync(int codeNum)
@@ -210,18 +193,9 @@ int main(void)
 
     SerialSetup(9600);
 
-    // as mentioned above, only one of the following code sections will be used
-    // (depending on which of the #define statements at the top of this file has been uncommented)
-
-    //SOLVE THE UNKNOWN
-
-    //TESTING
-/*	
-	
-	
-*/
-    LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6);
+    LiquidCrystal(GPIOB, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6); // LCD
     
+    //START GAME KEY MESSAGE
     setCursor(2,0);
     print("Press any key");
     setCursor(4,1);
@@ -230,6 +204,7 @@ int main(void)
     bool GAME = start_game();
     clear();
 
+    //LOOP FOR ONE COMPLETE GAME
     while(GAME)
     {
         //Initializations
@@ -294,10 +269,11 @@ int main(void)
             code[m] = get_number();
             while(checker)
             {
+                //To ensure that NO clues repeat in ONE game
                 if (m == 0) 
                 {
                     checker = false;
-                } else if(m == 1)// m > 0 //code[m] != code[m-1]
+                } else if(m == 1)
                 {
                     if(code[m] != code[m-1])
                         checker = false;
@@ -316,14 +292,15 @@ int main(void)
                     else
                         code[m] = get_number();
                 }//end assigning int values for the 4-digit code
-            }
+            }//end while loop for checker
             checker = true;
 
+            //Assigning int value to match with clue
             int codeNumForSync = 0;
             codeNumForSync = clue_number_sync(code[m]);
 
-            //storing values as characters for final display
-            if(code[m] > 9)
+            //Storing values as characters for final display
+            if(code[m] > 9) // Change double digits to single digits for FINAL 4-digit code
             {
                 codeDoubleDigits = code[m] - 10;
                 codeCh[m] = codeDoubleDigits + '0';
@@ -335,8 +312,8 @@ int main(void)
             //Display Clue
             print_clue(codeNumForSync);
 
-            bool hashtag = true;
-            if(m == 3)
+            bool hashtag = true; //For '#' key
+            if(m == 3) // Last round in one game -> leads to guessing the final code
             {
                 //Display Move to Guess Code Msg
                 setCursor(0, 0);
@@ -346,10 +323,7 @@ int main(void)
                 while(hashtag)
                 {
                     if (next_round() == true)
-                    {
-                    
                         hashtag = false;
-                    }
                 }
                 HAL_Delay(3000);
                 clear();
@@ -363,33 +337,33 @@ int main(void)
                 while (hashtag)
                 {
                     if (next_round() == true)
-                    {
                         hashtag = false;
-                    }
                 }
                 HAL_Delay(3000);
                 clear();
             }
         } //# of rounds loop
         
+        //Initililizations
         char keypadSymbols[12] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
         bool guessCheck = true;
         char guessCode[5];
 
-        for(int j = 0; j < 3; j++) // 3 trials in total
+        for(int j = 0; j < 3; j++) // 3 trials in total to guess code
         {
-            //Initializing Values to ' ' to print to LCD
+            //Initializing Values to ' ' to print string to LCD
             guessCode[1] = ' ';
             guessCode[2] = ' ';
             guessCode[3] = ' ';
             guessCode[4] = ' ';
-
             clear();
+
+            //Enter 4-giti Message LCD
             setCursor(1, 0);
             print("Enter 4-digit");
             setCursor(5,1);
             print("code: ");
-            for(int p = 0; p < 4; p++) // get 4-digit code from player
+            for(int p = 0; p < 4; p++) // get 4-digit code from player through keypad
             {
                 InitializeKeypad();
                 while (guessCheck)
@@ -403,40 +377,37 @@ int main(void)
                     }
                     while (ReadKeypad() >= 0);  // wait until key is released
                 }
-
+                //Show user which number they clicked on LCD
                 setCursor(11,1);
                 print(guessCode);
                 guessCheck = true;
             }//end for loop
             HAL_Delay(3000);
             clear();
-            if (code_verify(guessCode, codeCh))
+            if (code_verify(guessCode, codeCh)) //calling function to check if user-inputted code matches stored final code
             {
+                //Winning Message
                 setCursor(2, 0);
                 print("You escaped!");
                 HAL_Delay(3000);
                 clear();
-
                 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true);   // turn on LED
-                j=3;
+                j=3; //leaves for loop
             } else
             {
+                //Code is wrong Message
                 setCursor(3, 0);
                 print("Not quite");
                 HAL_Delay(3000);
                 clear();
-
-                for (int o = 0; o< 10; o++)
+                for (int o = 0; o< 10; o++) // FOR LED
                 {
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-                    if(j == 2)
-                    {
+                    if(j == 2) // If user gets code wrong 3 times, LED blinks faster at 3rd attempt
                         HAL_Delay(200);
-                    } else
-                    {
+                    else
                         HAL_Delay(300); 
-                    }//if statement for LED blinking speed
-                }
+                }//end for loop for LED blinking speed
             }
         }//end for loop for FINAL GUESS                
         setCursor(3, 0);
@@ -444,14 +415,15 @@ int main(void)
         HAL_Delay(4000);
         clear();
 
+        //Play Again Message
         setCursor(1, 0);
         print("To Play Again,");
         setCursor(4, 1);
         print("Press #");
-        if(terminate())
+        if(terminate()) // calls terminate() function that returns true if '#' key is pressed
         {
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
-            GAME = true;
+            GAME = true; // while loop continues to be true; repeats
         } else
         {
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false);   // turn off LED
@@ -459,13 +431,9 @@ int main(void)
         }//end play again if statement
         HAL_Delay(3000);
         clear();
-    }// ONE GAME
-
-
-
-
+    }//END OF LOOP FOR ONE GAME
     return 0;
-}
+}//end main
 
 // This function is called by the HAL once every millisecond
 void SysTick_Handler(void)
@@ -476,6 +444,7 @@ void SysTick_Handler(void)
 
 void print_clue(int clueNum)
 {
+    //MATCHING INT NUM WITH ACCORDING CLUE
     if(clueNum == 0)
     {
         setCursor(1,0);
@@ -484,10 +453,8 @@ void print_clue(int clueNum)
         print("on the board");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 1)
     {
-        
         setCursor(4,0);
         print("Tiration");
         HAL_Delay(6000);
@@ -495,52 +462,42 @@ void print_clue(int clueNum)
 
     } else if(clueNum == 2)
     {
-        
         setCursor(0,0);
         print("# of blue chairs");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 3)
     {
-        
         setCursor(0,0);
         print("int a = 4; a = 3");
         setCursor(1,1);
         print("std::cout<<a;");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 4)
     {
-        
         setCursor(2,0);
         print("# of working");
         setCursor(3,1);
         print("lightbulbs");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 5)
     {
-        
         setCursor(2,0);
         print("# of vertices");
         setCursor(0,1);
         print("on the nano tile");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 6)
     {
-
         setCursor(1,0);
         print("I can grow on");
         setCursor(5,1);
         print("trees");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 7)
     {
         setCursor(1,0);
@@ -549,111 +506,88 @@ void print_clue(int clueNum)
         print("up me");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 8)
     {
-        
         setCursor(3,0);
         print("Sugar cube");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 9)
     {
-        
         setCursor(1,0);
         print("# of countries");
         setCursor(4,1);
         print("you see");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 10)
     {
-
         setCursor(2,0);
         print("Protect your");
         setCursor(2,1);
         print("head with me");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 11)
     {
-
         setCursor(1,0);
         print("I sound like a");
         setCursor(6,1);
         print("car");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 12)
     {
-
         setCursor(2,0);
         print("I'm smarter ");
         setCursor(0,1);
         print("without a brain");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 13)
     {
         setCursor(3,0);
         print("___ crash");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 14)
     {
-
         setCursor(0,0);
         print("I am you in the");
         setCursor(5,1);
         print("future");
         HAL_Delay(6000);
         clear();
-
-        
     } else if(clueNum == 15)
     {
-
         setCursor(0,0);
         print("Red set of paper");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 16)
     {
         setCursor(0,0);
         print("I keep you awake");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 17)
     {
-
         setCursor(0,0);
         print("Move you without");
         setCursor(3,1);
         print("you moving");
         HAL_Delay(6000);
         clear();
-
     } else if(clueNum == 18)
     {
-
         setCursor(2,0);
         print("Climb me to ");
         setCursor(1,1);
         print("achieve goals");
         HAL_Delay(6000);
         clear();
-
     } else
     {
-
         setCursor(0,0);
         print("Where engineers");
         setCursor(6,1);
@@ -661,4 +595,4 @@ void print_clue(int clueNum)
         HAL_Delay(6000);
         clear();
     } // end if statements
-}
+}//end print_clue 
