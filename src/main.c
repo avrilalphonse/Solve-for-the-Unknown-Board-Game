@@ -102,7 +102,7 @@ int get_number()
     return ret_Val;
 }
 
-int clue_number_csyn(int codeNum)
+int clue_number_sync(int codeNum)
 {
     int numForClue = 0;
     numForClue = codeNum;
